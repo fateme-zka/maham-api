@@ -12,6 +12,11 @@ const app = Express();
 const cors = require("cors");
 app.use(cors());
 
+// Database
+const Context = require('./Context');
+const context = new Context();
+context.init();
+
 // Start server
 const port = process.env.server_port;
 app.listen(port, () => {
