@@ -11,12 +11,14 @@ module.exports = class Context {
     const UserType = require("./model/UserType");
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
+    const EstateImage = require("./model/EstateImage");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
     const user_type = UserType(this.database, Sequelize.DataTypes);
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
+    const estate_image = EstateImage(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(user_type, {
@@ -27,6 +29,9 @@ module.exports = class Context {
     });
     estate.belongsTo(estate_type, {
       foreignKey: { name: "estate_type_id", allowNull: false },
+    });
+    estate_image.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
     });
 
     this.database.sync({ force: false });
