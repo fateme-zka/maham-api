@@ -5,6 +5,22 @@ module.exports = class Context {
     this.database = require("./config/database");
   }
 
+  static initWhere(column, value) {
+    if (value) {
+      let toks = value.split(" ");
+      if (toks.length > 0) {
+        let conditions = [];
+        for (let i = 0; i < toks.length; i++) {
+          let obj = {};
+          obj[column] = { [Sequelize.Op.like]: "%" + toks[i] + "%" };
+          conditions.push(obj);
+        }
+        return conditions;
+      }
+    }
+    return [];
+  }
+
   init() {
     // Models
     const User = require("./model/User");
