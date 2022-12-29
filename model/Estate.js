@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     buliding_size_meter: { type: DataTypes.FLOAT, allowNull: true },
     loan: { type: DataTypes.STRING, allowNull: true },
     document_type: { type: DataTypes.STRING, allowNull: true },
+    // status
+    verified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    sold: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
     // OTHER----------------------------------------------------
     building_name: { type: DataTypes.STRING, allowNull: true },
     cooling_system: { type: DataTypes.STRING, allowNull: true },
@@ -24,13 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     crossing_width: { type: DataTypes.FLOAT, allowNull: true },
     length: { type: DataTypes.FLOAT, allowNull: true },
     width: { type: DataTypes.FLOAT, allowNull: true },
-    // counts
+    // count
     room_count: { type: DataTypes.INTEGER, allowNull: true },
     building_floor_count: { type: DataTypes.INTEGER, allowNull: true },
     building_unit_count: { type: DataTypes.INTEGER, allowNull: true },
     distance_to_city: { type: DataTypes.FLOAT, allowNull: true },
     distance_to_sea: { type: DataTypes.FLOAT, allowNull: true },
-    // types
+    // type
     flooring_type: { type: DataTypes.STRING, allowNull: true },
     cabinet_type: { type: DataTypes.STRING, allowNull: true },
     windows_type: { type: DataTypes.STRING, allowNull: true },
@@ -38,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     inner_door_type: { type: DataTypes.STRING, allowNull: true },
     entrance_door_type: { type: DataTypes.STRING, allowNull: true },
     facade_type: { type: DataTypes.STRING, allowNull: true },
-    // options
+    // option
     parking: { type: DataTypes.BOOLEAN, allowNull: true },
     storeroom: { type: DataTypes.BOOLEAN, allowNull: true },
     elevator: { type: DataTypes.BOOLEAN, allowNull: true },
