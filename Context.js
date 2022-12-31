@@ -28,6 +28,8 @@ module.exports = class Context {
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
     const EstateImage = require("./model/EstateImage");
+    const Like = require("./model/Like");
+    const Bookmark = require("./model/Bookmark");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
@@ -35,6 +37,8 @@ module.exports = class Context {
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
+    const like = Like(this.database, Sequelize.DataTypes);
+    const bookmark = Bookmark(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(user_type, {
@@ -49,7 +53,29 @@ module.exports = class Context {
     estate_image.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
     });
+    like.belongsTo(user, {
+      foreignKey: { name: "user_id", allowNull: false },
+    });
+    like.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
+    });
+    bookmark.belongsTo(user, {
+      foreignKey: { name: "user_id", allowNull: false },
+    });
+    bookmark.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
+    });
 
     this.database.sync({ force: false });
   }
+
+  //#region estate
+  //#region estate
+  //#region estate
+  // async getAllEstates(){
+  //   return this.database.models.estate.findAll({
+  //     limit: 30,
+  //   })
+  // }
+  //#endregion
 };
