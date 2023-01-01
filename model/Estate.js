@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     description: { type: DataTypes.TEXT, allowNull: true },
     land_size_meter: { type: DataTypes.FLOAT, allowNull: true },
     buliding_size_meter: { type: DataTypes.FLOAT, allowNull: true },
-    loan: { type: DataTypes.STRING, allowNull: true },
+    loan: { type: DataTypes.BOOLEAN, allowNull: true },
     document_type: { type: DataTypes.STRING, allowNull: true },
     // status
     verified: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
