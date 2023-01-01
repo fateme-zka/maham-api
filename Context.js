@@ -30,6 +30,8 @@ module.exports = class Context {
     const EstateImage = require("./model/EstateImage");
     const Like = require("./model/Like");
     const Bookmark = require("./model/Bookmark");
+    const Province = require("./model/Province");
+    const City = require("./model/City");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
@@ -39,6 +41,8 @@ module.exports = class Context {
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
     const like = Like(this.database, Sequelize.DataTypes);
     const bookmark = Bookmark(this.database, Sequelize.DataTypes);
+    const province = Province(this.database, Sequelize.DataTypes);
+    const city = City(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(user_type, {
@@ -49,6 +53,12 @@ module.exports = class Context {
     });
     estate.belongsTo(estate_type, {
       foreignKey: { name: "estate_type_id", allowNull: false },
+    });
+    estate.belongsTo(province, {
+      foreignKey: { name: "province_id", allowNull: false },
+    });
+    estate.belongsTo(city, {
+      foreignKey: { name: "city_id", allowNull: false },
     });
     estate_image.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
@@ -64,6 +74,9 @@ module.exports = class Context {
     });
     bookmark.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
+    });
+    city.belongsTo(province, {
+      foreignKey: { name: "province_id", allowNull: false },
     });
 
     this.database.sync({ force: false });
