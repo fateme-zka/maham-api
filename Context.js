@@ -87,7 +87,13 @@ module.exports = class Context {
     return await this.database.models[model].findOne(options);
   }
 
-  //#region estate
+  //#region User-------------------------------------------------------------
+  async getUser(id) {
+    return await this.getModel("user", { where: { id } });
+  }
+  //#endregion
+
+  //#region Estate-----------------------------------------------------------
   async getAllEstates() {
     return this.database.models.estate.findAll({
       limit: 30,
