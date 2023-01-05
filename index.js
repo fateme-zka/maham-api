@@ -17,6 +17,9 @@ const Context = require('./Context');
 const context = new Context();
 context.init();
 
+// Api Routes
+app.use("/estate", require("./route/estate"));
+
 // Start server
 const port = process.env.server_port;
 app.listen(port, () => {

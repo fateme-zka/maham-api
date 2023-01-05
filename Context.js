@@ -85,10 +85,10 @@ module.exports = class Context {
   //#region estate
   //#region estate
   //#region estate
-  // async getAllEstates(){
-  //   return this.database.models.estate.findAll({
-  //     limit: 30,
-  //   })
-  // }
+  async getAllEstates() {
+    return this.database.models.estate.findAll({
+      limit: 30,
+    });
+  }
   //#endregion
 };
