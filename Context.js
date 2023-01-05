@@ -82,8 +82,11 @@ module.exports = class Context {
     this.database.sync({ force: false });
   }
 
-  //#region estate
-  //#region estate
+  async getModel(model, options) {
+    if (!options) options = {};
+    return await this.database.models[model].findOne(options);
+  }
+
   //#region estate
   async getAllEstates() {
     return this.database.models.estate.findAll({
