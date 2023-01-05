@@ -24,7 +24,7 @@ module.exports = class Context {
   init() {
     // Models
     const User = require("./model/User");
-    const UserType = require("./model/UserType");
+    const Role = require("./model/Role");
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
     const EstateImage = require("./model/EstateImage");
@@ -35,7 +35,7 @@ module.exports = class Context {
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
-    const user_type = UserType(this.database, Sequelize.DataTypes);
+    const role = Role(this.database, Sequelize.DataTypes);
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
@@ -45,8 +45,8 @@ module.exports = class Context {
     const city = City(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
-    user.belongsTo(user_type, {
-      foreignKey: { name: "user_type_id", allowNull: false },
+    user.belongsTo(role, {
+      foreignKey: { name: "role_id", allowNull: false },
     });
     estate.belongsTo(user, {
       foreignKey: { name: "owner_id", allowNull: false },
