@@ -8,5 +8,6 @@ module.exports = new Sequelize(
         dialect: 'mysql',
         host: process.env.database_host,
         port: process.env.database_port,
+        logging: false
     });
 

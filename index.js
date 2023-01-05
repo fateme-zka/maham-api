@@ -13,12 +13,22 @@ const cors = require("cors");
 app.use(cors());
 
 // Database
-const Context = require('./Context');
+const Context = require("./Context");
 const context = new Context();
 context.init();
 
 // Api Routes
 app.use("/estate", require("./route/estate"));
+
+// TESTING DATABASE CONNECTION:
+const db = require("./config/database");
+db.authenticate()
+  .then(() => {
+    Winston.info("DB Connection has been established successfully.");
+  })
+  .catch((error) => {
+    Winston.error(error);
+  });
 
 // Start server
 const port = process.env.server_port;
