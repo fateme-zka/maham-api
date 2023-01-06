@@ -1,9 +1,9 @@
 const router = require("express").Router();
 
-// const requestHandler = require("../middleware/requestHandler");
+const requestHandler = require("../middleware/requestHandler");
 
 const getAllController = require("../controller/estate/getAll");
 
-router.get("/all", getAllController.handler);
+router.get("/all", requestHandler(getAllController));
 
-module.exports = router; 
+module.exports = router;

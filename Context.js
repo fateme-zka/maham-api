@@ -94,7 +94,7 @@ module.exports = class Context {
   //#endregion
 
   //#region Estate-----------------------------------------------------------
-  async getAllEstates() {
+  async getEstates() {
     return this.database.models.estate.findAll({
       limit: 30,
     });
