@@ -90,10 +90,36 @@ module.exports = class Context {
   //#region User-------------------------------------------------------------
   async getUser(column, value) {
     let where = {};
-    if (column === "id") where = { id: value };
-    else if (column === "username") where = { username: value };
-    else if (column === "phone_number") where = { phone_number: value };
+    if (column == "id") where = { id: value };
+    else if (column == "username") where = { username: value };
+    else if (column == "phone_number") where = { phone_number: value };
     return await this.getModel("user", { where });
+  }
+
+  async register(
+    role_id,
+    admin,
+    username,
+    password,
+    first_name,
+    last_name,
+    phone_number,
+    email
+  ) {
+    first_name = first_name.trim();
+    if (last_name) last_name = last_name.trim();
+    if (email) email = email.trim();
+
+    return await this.database.models.user.create({
+      role_id,
+      admin,
+      username,
+      password,
+      first_name,
+      last_name,
+      phone_number,
+      email,
+    });
   }
   //#endregion
 
