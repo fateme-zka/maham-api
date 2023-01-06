@@ -1,6 +1,7 @@
 const Winston = require("../config/winston");
 const Joi = require("joi");
 const Context = require("../Context");
+const error_operation = require("../util/error_operation");
 
 module.exports = (controller) => async (req, res) => {
   req.context = new Context();
@@ -15,11 +16,7 @@ module.exports = (controller) => async (req, res) => {
     message: "Success",
   };
 
-  req.throw = (code, message) => {
-    let error = new Error(message);
-    error.code = code;
-    throw error;
-  };
+  req.throw = error_operation;
 
   try {
     // check for validation
