@@ -16,7 +16,7 @@ module.exports = (controller) => async (req, res) => {
     message: "Success",
   };
 
-  req.throw = error_operation;
+  req.throw = error_operation.throwError;
 
   try {
     // check for validation
