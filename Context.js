@@ -88,8 +88,12 @@ module.exports = class Context {
   }
 
   //#region User-------------------------------------------------------------
-  async getUser(id) {
-    return await this.getModel("user", { where: { id } });
+  async getUser(column, value) {
+    let where = {};
+    if (column === "id") where = { id: value };
+    else if (column === "username") where = { username: value };
+    else if (column === "phone_number") where = { phone_number: value };
+    return await this.getModel("user", { where });
   }
   //#endregion
 

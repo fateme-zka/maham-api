@@ -46,7 +46,7 @@ module.exports = (controller) => async (req, res) => {
 
     // user
     req.getUser = async () => {
-      req.user = await req.context.getUser(req.session.user_id);
+      req.user = await req.context.getUser("id", req.session.user_id);
       return req.user;
     };
 
@@ -57,8 +57,8 @@ module.exports = (controller) => async (req, res) => {
     }
 
     if (controller.auth_admin) {
-      let user = await req.getUser();
-      if (!user || !user.admin) req.throw(401, "Admin user is required.");
+      // let user = await req.getUser();
+      // if (!user || !user.admin) req.throw(401, "Admin user is required.");
     }
 
     // call controller
