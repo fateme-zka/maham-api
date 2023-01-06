@@ -7,6 +7,7 @@ const Winston = require("./config/winston");
 // Express
 const Express = require("express");
 const app = Express();
+app.use(Express.json());
 
 // Cors
 const cors = require("cors");
