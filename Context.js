@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const jwt = require("jsonwebtoken");
 
 module.exports = class Context {
   constructor() {
@@ -25,6 +26,7 @@ module.exports = class Context {
     // Models
     const User = require("./model/User");
     const Role = require("./model/Role");
+    const Session = require("./model/Session");
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
     const EstateImage = require("./model/EstateImage");
@@ -36,6 +38,7 @@ module.exports = class Context {
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
     const role = Role(this.database, Sequelize.DataTypes);
+    const session = Session(this.database, Sequelize.DataTypes);
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
@@ -78,6 +81,12 @@ module.exports = class Context {
     city.belongsTo(province, {
       foreignKey: { name: "province_id", allowNull: false },
     });
+    session.belongsTo(user, {
+      foreignKey: { name: "user_id", allowNull: false },
+    });
+    session.belongsTo(role, {
+      foreignKey: { name: "role_id", allowNull: false },
+    });
 
     this.database.sync({ force: false });
   }
@@ -87,7 +96,7 @@ module.exports = class Context {
     return await this.database.models[model].findOne(options);
   }
 
-  //#region User-------------------------------------------------------------
+  //#region User
   async getUser(column, value) {
     let where = {};
     if (column == "id") where = { id: value };
@@ -123,7 +132,14 @@ module.exports = class Context {
   }
   //#endregion
 
-  //#region Estate-----------------------------------------------------------
+  //#region Role
+  async getRoleId(name) {
+    let role = await this.database.models.role.findOne({ where: { name } });
+    return role.id;
+  }
+  //#endregion
+
+  //#region Estate
   async getEstates() {
     return this.database.models.estate.findAll({
       limit: 30,
