@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-const jwt = require("jsonwebtoken");
 
 module.exports = class Context {
   constructor() {
@@ -102,10 +101,16 @@ module.exports = class Context {
     if (column == "id") where = { id: value };
     else if (column == "username") where = { username: value };
     else if (column == "phone_number") where = { phone_number: value };
-    return await this.getModel("user", { where });
+    return await this.getModel("user", {
+      where,
+      include: {
+        model: this.database.models.role,
+        as: "role",
+      },
+    });
   }
 
-  async register(
+  async registerUser(
     role_id,
     admin,
     username,
@@ -133,9 +138,32 @@ module.exports = class Context {
   //#endregion
 
   //#region Role
-  async getRoleId(name) {
-    let role = await this.database.models.role.findOne({ where: { name } });
-    return role.id;
+  async getRole(name) {
+    return await this.database.models.role.findOne({ where: { name } });
+  }
+  //#endregion
+
+  //#region Session
+  async createSession(user_id, role_id, admin) {
+    let session = await this.database.models.session.findOne({
+      where: {
+        user_id,
+        role_id,
+        admin,
+      },
+    });
+    if (!session) {
+      session = await this.database.models.session.create({
+        user_id,
+        role_id,
+        admin,
+      });
+    }
+    return session;
+  }
+
+  async deleteSession(session_id) {
+    await this.database.models.session.destroy({ where: { id: session_id } });
   }
   //#endregion
 

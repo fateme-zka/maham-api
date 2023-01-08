@@ -2,6 +2,7 @@ const Winston = require("../config/winston");
 const Joi = require("joi");
 const Context = require("../Context");
 const error_operation = require("../util/error_operation");
+const { auth_token_verifier } = require("../util/header_processor");
 
 module.exports = (controller) => async (req, res) => {
   req.context = new Context();
@@ -52,13 +53,13 @@ module.exports = (controller) => async (req, res) => {
 
     // check for auth
     if (controller.auth) {
-      // jwt session
-      // todo
-    }
+      req.session = await auth_token_verifier(req, process.env.jwt_key);
 
-    if (controller.auth_admin) {
-      // let user = await req.getUser();
-      // if (!user || !user.admin) req.throw(401, "Admin user is required.");
+      // auth admin
+      if (controller.auth_admin) {
+        if (!req.user || !req.user.admin)
+          req.throw(401, "Admin user is required.");
+      }
     }
 
     // call controller

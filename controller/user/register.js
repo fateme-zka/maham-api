@@ -31,8 +31,10 @@ const handler = async function (req, res) {
   // hash password
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
 
-  return await req.context.register(
-    process.env.customer_position,
+  let role = await req.context.getRole("Customer");
+
+  return await req.context.registerUser(
+    role.id,
     false,
     username,
     password,
