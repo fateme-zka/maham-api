@@ -123,7 +123,6 @@ module.exports = class Context {
     first_name = first_name.trim();
     if (last_name) last_name = last_name.trim();
     if (email) email = email.trim();
-
     return await this.database.models.user.create({
       role_id,
       admin,

@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const Phone = require("phone");
 const Bcrypt = require("bcrypt");
+const { set_auth_header } = require("../../util/header_processor");
 
 const body_schema = Joi.object({
   username: Joi.string().required(),
@@ -11,7 +12,7 @@ const body_schema = Joi.object({
   email: Joi.string().email().allow(null),
 });
 
-const handler = async function (req, res) {
+const handler = async function (req) {
   let { username, password, first_name, last_name, phone_number, email } =
     req.body;
 
@@ -32,8 +33,8 @@ const handler = async function (req, res) {
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
 
   let role = await req.context.getRole("Customer");
-
-  return await req.context.registerUser(
+  console.log("ROLE:",role);
+  user = await req.context.registerUser(
     role.id,
     false,
     username,
@@ -43,6 +44,15 @@ const handler = async function (req, res) {
     phone_number,
     email
   );
+  let session = req.context.createSession(user.id, role.id, false);
+  const payload = {
+    user_id: user.id,
+    role_id: role.id,
+    admin: false,
+    session_id: session.id,
+  };
+  let accessToken = set_auth_header(req, payload, process.env.jwt_key);
+  return { accessToken, user };
 };
 
 module.exports = { handler, body_schema, auth: false };
