@@ -11,5 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     last_name: { type: DataTypes.STRING, allowNull: true },
     phone_number: { type: DataTypes.STRING, allowNull: false, unique: true },
     email: { type: DataTypes.STRING, allowNull: true },
+    image: { type: DataTypes.STRING, allowNull: true },
+    cover_image: { type: DataTypes.STRING, allowNull: true },
   });
 };

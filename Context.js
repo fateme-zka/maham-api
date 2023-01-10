@@ -109,7 +109,6 @@ module.exports = class Context {
       },
     });
   }
-
   async registerUser(
     role_id,
     admin,
@@ -118,7 +117,9 @@ module.exports = class Context {
     first_name,
     last_name,
     phone_number,
-    email
+    email,
+    image,
+    cover_image
   ) {
     first_name = first_name.trim();
     if (last_name) last_name = last_name.trim();
@@ -132,6 +133,8 @@ module.exports = class Context {
       last_name,
       phone_number,
       email,
+      image,
+      cover_image,
     });
   }
   //#endregion
