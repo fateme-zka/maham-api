@@ -163,7 +163,6 @@ module.exports = class Context {
     }
     return session;
   }
-
   async deleteSession(id) {
     await this.database.models.session.destroy({ where: { id } });
   }
