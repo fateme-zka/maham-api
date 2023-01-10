@@ -137,8 +137,11 @@ module.exports = class Context {
   //#endregion
 
   //#region Role
-  async getRole(name) {
-    return await this.database.models.role.findOne({ where: { name } });
+  async getRole(id, name) {
+    let where = {};
+    if (id) where.id = id;
+    if (name) where.name = { [Sequelize.Op.like]: "%" + name.trim() + "%" };
+    return await this.database.models.role.findOne({ where });
   }
   //#endregion
 
@@ -161,8 +164,8 @@ module.exports = class Context {
     return session;
   }
 
-  async deleteSession(session_id) {
-    await this.database.models.session.destroy({ where: { id: session_id } });
+  async deleteSession(id) {
+    await this.database.models.session.destroy({ where: { id } });
   }
   //#endregion
 

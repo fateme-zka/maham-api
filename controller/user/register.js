@@ -15,12 +15,10 @@ const body_schema = Joi.object({
 const handler = async function (req) {
   let { username, password, first_name, last_name, phone_number, email } =
     req.body;
-
+  let role_id = parseInt(process.env.customer_id);
   // check username
   let user = await req.context.getUser("username", username);
-  console.log(user);
   if (user) req.throw(400, "Username already exists.");
-
   // check phone_number
   if (phone_number) {
     if (!Phone.phone(phone_number).isValid)
@@ -28,14 +26,10 @@ const handler = async function (req) {
     user = await req.context.getUser("phone_number", phone_number);
     if (user) req.throw(400, "Phone number already exists.");
   }
-
   // hash password
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
-
-  let role = await req.context.getRole("Customer");
-  console.log("ROLE:",role);
   user = await req.context.registerUser(
-    role.id,
+    role_id,
     false,
     username,
     password,
@@ -44,10 +38,10 @@ const handler = async function (req) {
     phone_number,
     email
   );
-  let session = req.context.createSession(user.id, role.id, false);
+  let session = await req.context.createSession(user.id, role_id, false);
   const payload = {
     user_id: user.id,
-    role_id: role.id,
+    role_id,
     admin: false,
     session_id: session.id,
   };

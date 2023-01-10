@@ -57,7 +57,8 @@ module.exports = (controller) => async (req, res) => {
 
       // auth admin
       if (controller.auth_admin) {
-        if (!req.user || !req.user.admin)
+        req.user = await req.getUser();
+        if (!req.user.admin)
           req.throw(401, "Admin user is required.");
       }
     }
