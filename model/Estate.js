@@ -1,10 +1,11 @@
 const Base = require("./Base");
+const { Sequelize } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   return Base(sequelize, DataTypes, "estate", {
     id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
     estate_type_id: { type: DataTypes.INTEGER, allowNull: false },
-    owner_id: { type: DataTypes.INTEGER, allowNull: false },
+    user_id: { type: DataTypes.INTEGER, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
     phone_number: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: true },
