@@ -32,7 +32,6 @@ module.exports = (controller) => async (req, res) => {
         req.throw(400, message);
       }
     }
-
     if (controller.query_schema) {
       const validation = await Joi.compile(controller.query_schema)
         .prefs({ errors: { label: "key" } })
@@ -54,12 +53,14 @@ module.exports = (controller) => async (req, res) => {
     // check for auth
     if (controller.auth) {
       req.session = await auth_token_verifier(req, process.env.jwt_key);
-
+      req.user = await req.getUser();
+      // auth consultant
+      if (auth_consultant)
+        if (req.user.role_id == process.env.customer_id)
+          req.throw(401, "Customers have no access!");
       // auth admin
       if (controller.auth_admin) {
-        req.user = await req.getUser();
-        if (!req.user.admin)
-          req.throw(401, "Admin user is required.");
+        if (!req.user.admin) req.throw(401, "Admin user is required.");
       }
     }
 
