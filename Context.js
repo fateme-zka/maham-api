@@ -5,22 +5,6 @@ module.exports = class Context {
     this.database = require("./config/database");
   }
 
-  static initWhere(column, value) {
-    if (value) {
-      let toks = value.split(" ");
-      if (toks.length > 0) {
-        let conditions = [];
-        for (let i = 0; i < toks.length; i++) {
-          let obj = {};
-          obj[column] = { [Sequelize.Op.like]: "%" + toks[i] + "%" };
-          conditions.push(obj);
-        }
-        return conditions;
-      }
-    }
-    return [];
-  }
-
   init() {
     // Models
     const User = require("./model/User");
@@ -51,7 +35,7 @@ module.exports = class Context {
       foreignKey: { name: "role_id", allowNull: false },
     });
     estate.belongsTo(user, {
-      foreignKey: { name: "owner_id", allowNull: false },
+      foreignKey: { name: "user_id", allowNull: false },
     });
     estate.belongsTo(estate_type, {
       foreignKey: { name: "estate_type_id", allowNull: false },
@@ -88,6 +72,22 @@ module.exports = class Context {
     });
 
     this.database.sync({ force: false });
+  }
+
+  static initWhere(column, value) {
+    if (value) {
+      let toks = value.split(" ");
+      if (toks.length > 0) {
+        let conditions = [];
+        for (let i = 0; i < toks.length; i++) {
+          let obj = {};
+          obj[column] = { [Sequelize.Op.like]: "%" + toks[i] + "%" };
+          conditions.push(obj);
+        }
+        return conditions;
+      }
+    }
+    return [];
   }
 
   async getModel(model, options) {
