@@ -22,10 +22,15 @@ module.exports = (sequelize, DataTypes) => {
     land_size_meter: { type: DataTypes.FLOAT, allowNull: true },
     buliding_size_meter: { type: DataTypes.FLOAT, allowNull: true },
     loan: { type: DataTypes.BOOLEAN, allowNull: true },
-    document_type: {
-      type: Sequelize.ENUM("doc1", "doc2", "doc3"),
+    document_type: { type: DataTypes.STRING, allowNull: true },
+    // sale
+    sale_method: {
+      type: Sequelize.ENUM("rent", "pawn", "sell"),
       allowNull: true,
     },
+    pawn_price: { type: DataTypes.INTEGER, allowNull: false },
+    rent_price: { type: DataTypes.INTEGER, allowNull: false },
+    meter_price: { type: DataTypes.INTEGER, allowNull: false },
     // status
     verified: {
       type: DataTypes.BOOLEAN,
@@ -48,34 +53,13 @@ module.exports = (sequelize, DataTypes) => {
     building_floor_count: { type: DataTypes.INTEGER, allowNull: true },
     building_unit_count: { type: DataTypes.INTEGER, allowNull: true },
     // type
-    flooring_type: {
-      type: Sequelize.ENUM("floor1", "floor2", "floor3"),
-      allowNull: true,
-    },
-    cabinet_type: {
-      type: Sequelize.ENUM("cabinet1", "cabinet2", "cabinet3"),
-      allowNull: true,
-    },
-    windows_type: {
-      type: Sequelize.ENUM("windows1", "windows2", "windows3"),
-      allowNull: true,
-    },
-    closet_type: {
-      type: Sequelize.ENUM("closet1", "closet2", "closet3"),
-      allowNull: true,
-    },
-    inner_door_type: {
-      type: Sequelize.ENUM("indoor1", "indoor2", "indoor3"),
-      allowNull: true,
-    },
-    entrance_door_type: {
-      type: Sequelize.ENUM("endoor1", "endoor2", "endoor3"),
-      allowNull: true,
-    },
-    facade_type: {
-      type: Sequelize.ENUM("facade1", "facade2", "facade3"),
-      allowNull: true,
-    },
+    flooring_type: { type: DataTypes.STRING, allowNull: true },
+    cabinet_type: { type: DataTypes.STRING, allowNull: true },
+    windows_type: { type: DataTypes.STRING, allowNull: true },
+    closet_type: { type: DataTypes.STRING, allowNull: true },
+    inner_door_type: { type: DataTypes.STRING, allowNull: true },
+    entrance_door_type: { type: DataTypes.STRING, allowNull: true },
+    facade_type: { type: DataTypes.STRING, allowNull: true },
     // option
     parking: { type: DataTypes.BOOLEAN, allowNull: true },
     storeroom: { type: DataTypes.BOOLEAN, allowNull: true },
