@@ -14,6 +14,7 @@ module.exports = class Context {
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
     const EstateImage = require("./model/EstateImage");
+    const EstateScore = require("./model/EstateScore");
     const Like = require("./model/Like");
     const Bookmark = require("./model/Bookmark");
     const Province = require("./model/Province");
@@ -26,6 +27,7 @@ module.exports = class Context {
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
+    const estate_score = EstateScore(this.database, Sequelize.DataTypes);
     const like = Like(this.database, Sequelize.DataTypes);
     const bookmark = Bookmark(this.database, Sequelize.DataTypes);
     const province = Province(this.database, Sequelize.DataTypes);
@@ -48,6 +50,9 @@ module.exports = class Context {
       foreignKey: { name: "city_id", allowNull: false },
     });
     estate_image.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
+    });
+    estate_score.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
     });
     like.belongsTo(user, {
