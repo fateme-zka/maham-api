@@ -183,6 +183,17 @@ module.exports = class Context {
       limit: 30,
     });
   }
+  async getEstate(id) {
+    let estate = await this.database.models.estate.findOne({
+      where: { id },
+    });
+    let images = await this.database.models.estate_image.findAll({
+      where: { estate_id: id },
+    });
+    let images_field = [];
+    if (images.length > 0) images_field = images;
+    return { ...estate.dataValues, ...{ images: images_field } };
+  }
   async addEstate(
     estate_type_id,
     user_id,
