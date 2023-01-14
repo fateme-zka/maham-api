@@ -318,6 +318,12 @@ module.exports = class Context {
     });
     return estate;
   }
+  async verifyEstate(id) {
+    return await this.database.models.estate.update(
+      { verified: true },
+      { where: { id } }
+    );
+  }
   //#endregion
 
   //#region Estate Type
