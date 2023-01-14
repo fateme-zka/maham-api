@@ -244,9 +244,10 @@ module.exports = class Context {
     air_conditioner,
     camera,
     video_door_phone,
-    pool
+    pool,
+    images
   ) {
-    return this.database.models.estate.create({
+    let estate = await this.database.models.estate.create({
       estate_type_id,
       user_id,
       name,
@@ -309,6 +310,13 @@ module.exports = class Context {
       video_door_phone,
       pool,
     });
+    images.forEach(async (image) => {
+      await this.database.models.estate_image.create({
+        estate_id: estate.id,
+        image,
+      });
+    });
+    return estate;
   }
   //#endregion
 
@@ -317,7 +325,7 @@ module.exports = class Context {
     return await this.database.models.estate_type.findOne({
       where: {
         name: {
-          [Op.like]: "%" + name + "%",
+          [Op.like]: "%" + name.trim() + "%",
         },
       },
     });

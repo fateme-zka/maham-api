@@ -28,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       type: Sequelize.ENUM("rent", "pawn", "sell"),
       allowNull: true,
     },
-    pawn_price: { type: DataTypes.INTEGER, allowNull: false },
-    rent_price: { type: DataTypes.INTEGER, allowNull: false },
-    meter_price: { type: DataTypes.INTEGER, allowNull: false },
+    pawn_price: { type: DataTypes.INTEGER, allowNull: true },
+    rent_price: { type: DataTypes.INTEGER, allowNull: true },
+    meter_price: { type: DataTypes.INTEGER, allowNull: true },
     // status
     verified: {
       type: DataTypes.BOOLEAN,

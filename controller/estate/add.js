@@ -58,6 +58,8 @@ const body_schema = Joi.object({
   camera: Joi.boolean().allow(""),
   video_door_phone: Joi.boolean().allow(""),
   pool: Joi.boolean().allow(""),
+  // images
+  images: Joi.array().items(Joi.string()).allow(""),
 });
 
 const handler = async function (req) {
@@ -117,15 +119,16 @@ const handler = async function (req) {
     camera,
     video_door_phone,
     pool,
+    images,
   } = req.body;
   let user_id = req.user.id;
-  let estate_type = req.params.estate_type;
-  let estate_type_id = req.context.getEstateType(estate_type).id; // todo
+  let { estate_type } = req.params;
+  estate_type = await req.context.getEstateType(estate_type);
   let sale_method = req.params.sale_method;
   let verified = false;
   if (req.user.admin) verified = true;
   return await req.context.addEstate(
-    estate_type_id,
+    estate_type_id = estate_type.id,
     user_id,
     name,
     phone_number,
@@ -144,8 +147,8 @@ const handler = async function (req) {
     rent_price,
     meter_price,
     verified,
-    sold,
-    active,
+    (sold = false),
+    (active = true),
     building_name,
     cooling_system,
     heating_system,
@@ -185,7 +188,8 @@ const handler = async function (req) {
     air_conditioner,
     camera,
     video_door_phone,
-    pool
+    pool,
+    images
   );
 };
 

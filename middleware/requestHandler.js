@@ -55,7 +55,7 @@ module.exports = (controller) => async (req, res) => {
       req.session = await auth_token_verifier(req, process.env.jwt_key);
       req.user = await req.getUser();
       // auth consultant
-      if (auth_consultant)
+      if (controller.auth_consultant)
         if (req.user.role_id == process.env.customer_id)
           req.throw(401, "Customers have no access!");
       // auth admin
