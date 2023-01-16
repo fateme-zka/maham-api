@@ -7,7 +7,7 @@ const verifyController = require("../controller/estate/verify");
 const getController = require("../controller/estate/get");
 const postController = require("../controller/estate/add");
 
-router.get("/all", requestHandler(getAllController)); // should get query
+router.get("/all", requestHandler(getAllController)); // should get filter query
 router.get("/verify/:id", requestHandler(verifyController));
 router.get("/:id", requestHandler(getController));
 router.post("/:estate_type/:sale_method/add", requestHandler(postController));

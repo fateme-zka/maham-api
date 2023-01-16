@@ -128,7 +128,7 @@ const handler = async function (req) {
   let verified = false;
   if (req.user.admin) verified = true;
   return await req.context.addEstate(
-    estate_type_id = estate_type.id,
+    estate_type.id,
     user_id,
     name,
     phone_number,
