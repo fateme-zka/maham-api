@@ -184,17 +184,14 @@ module.exports = class Context {
     });
   }
   async getEstate(id) {
-    let estate = await this.database.models.estate.findOne({
-      where: { id },
-    });
+    let estate = await this.getModel("estate", { where: { id } });
     if (estate) {
       let images = await this.database.models.estate_image.findAll({
         where: { estate_id: id },
       });
-      let images_field = [];
-      if (images.length > 0) images_field = images;
-      return { ...estate.dataValues, ...{ images: images_field } };
+      estate.dataValues.images = images;
     }
+    return estate;
   }
   async addEstate(
     estate_type_id,
@@ -336,6 +333,32 @@ module.exports = class Context {
       { verified: true },
       { where: { id } }
     );
+  }
+  async updateEstate(id, images, fields) {
+    let obj = {};
+    // fields.forEach((field) => {
+    //   if (field) obj[field] = field;
+    // });
+    fields.map((field) => {
+      if (field) obj[field] = field;
+    });
+    let estate = await this.database.models.estate.update(obj, {
+      where: { id },
+    });
+    // replace all images
+    await this.database.models.estate_image.destroy({
+      where: { estate_id: id },
+    });
+    images.forEach(async (image) => {
+      await this.database.models.estate_image.create({
+        estate_id: id,
+        image,
+      });
+    });
+    return estate;
+  }
+  async deleteEstate(id) {
+    await this.database.models.estate.destroy({ where: { id } });
   }
   //#endregion
 
