@@ -2,7 +2,7 @@ const Winston = require("../config/winston");
 const Joi = require("joi");
 const Context = require("../Context");
 const error_operation = require("../util/error_operation");
-const { auth_token_verifier } = require("../util/header_processor");
+const { token_parser } = require("../util/token_parser");
 
 module.exports = (controller) => async (req, res) => {
   req.context = new Context();
@@ -52,7 +52,7 @@ module.exports = (controller) => async (req, res) => {
 
     // check for auth
     if (controller.auth) {
-      req.session = await auth_token_verifier(req, process.env.jwt_key);
+      req.session = await token_parser(req, process.env.jwt_key);
       req.user = await req.getUser();
       // auth consultant
       if (controller.auth_consultant)

@@ -9,7 +9,7 @@ const logoutController = require("../controller/user/logout");
 const getController = require("../controller/user/get");
 
 router.post("/register", requestHandler(registerCustomerController));
-router.post("/admin_register", requestHandler(adminRegisterController));
+router.post("/admin/register", requestHandler(adminRegisterController));
 router.post("/login", requestHandler(loginController));
 router.post("/logout", requestHandler(logoutController));
 router.get("/:id", requestHandler(getController));

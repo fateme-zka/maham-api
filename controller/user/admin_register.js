@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const Phone = require("phone");
 const Bcrypt = require("bcrypt");
-const { set_auth_header } = require("../../util/header_processor");
+const Jwt = require("jsonwebtoken");
 
 const body_schema = Joi.object({
   role_id: Joi.number().required(),
@@ -56,12 +56,12 @@ const handler = async function (req) {
   let session = await req.context.createSession(user.id, role_id, admin);
   const payload = {
     user_id: user.id,
-    role_id,
-    admin,
+    role_id: user.role_id,
+    admin: user.admin,
     session_id: session.id,
   };
-  let accessToken = set_auth_header(req, payload, process.env.jwt_key);
-  return { accessToken, user };
+  const token = Jwt.sign(payload, process.env.jwt_key);
+  return { token, user };
 };
 
 module.exports = { handler, body_schema, auth: true, auth_admin: true };
