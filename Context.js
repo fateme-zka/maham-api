@@ -186,7 +186,16 @@ module.exports = class Context {
   async getEstate(id) {
     let estate = await this.getModel("estate", {
       where: { id },
-      // include: { model: this.database.models.province, as: "province" },
+      include: [
+        {
+          model: this.database.models.province,
+          as: "province",
+        },
+        {
+          model: this.database.models.city,
+          as: "city",
+        },
+      ],
     });
     if (estate) {
       let images = await this.database.models.estate_image.findAll({
