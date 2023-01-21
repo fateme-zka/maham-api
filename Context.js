@@ -360,6 +360,12 @@ module.exports = class Context {
   async deleteEstate(id) {
     await this.database.models.estate.destroy({ where: { id } });
   }
+  async switchStatusEstate(id, active, sold) {
+    let options = {};
+    if (active) options.active = active == "true";
+    if (sold) options.sold = sold == "true";
+    return await this.database.models.estate.update(options, { where: { id } });
+  }
   //#endregion
 
   //#region Estate Type
