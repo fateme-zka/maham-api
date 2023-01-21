@@ -348,14 +348,11 @@ module.exports = class Context {
     );
   }
   async updateEstate(id, images, fields) {
-    let obj = {};
-    // fields.forEach((field) => {
-    //   if (field) obj[field] = field;
-    // });
-    fields.map((field) => {
-      if (field) obj[field] = field;
+    let values = {};
+    Object.keys(fields).forEach((key) => {
+      if (fields[key]) values[key] = fields[key];
     });
-    let estate = await this.database.models.estate.update(obj, {
+    let estate = await this.database.models.estate.update(values, {
       where: { id },
     });
     // replace all images
