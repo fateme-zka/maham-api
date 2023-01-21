@@ -184,7 +184,10 @@ module.exports = class Context {
     });
   }
   async getEstate(id) {
-    let estate = await this.getModel("estate", { where: { id } });
+    let estate = await this.getModel("estate", {
+      where: { id },
+      // include: { model: this.database.models.province, as: "province" },
+    });
     if (estate) {
       let images = await this.database.models.estate_image.findAll({
         where: { estate_id: id },
@@ -377,6 +380,15 @@ module.exports = class Context {
         },
       },
     });
+  }
+  //#endregion
+
+  //#region Province/
+  async getProvinces() {
+    return await this.database.models.province.findAll();
+  }
+  async getCities(province_id) {
+    return await this.database.models.city.findAll({ where: { province_id } });
   }
   //#endregion
 };
