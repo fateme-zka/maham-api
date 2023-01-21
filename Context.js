@@ -180,6 +180,7 @@ module.exports = class Context {
   //#region Estate
   async getEstates() {
     return this.database.models.estate.findAll({
+      where: { verified: true, sold: false, active: true },
       limit: 30,
     });
   }
@@ -392,7 +393,7 @@ module.exports = class Context {
   }
   //#endregion
 
-  //#region Province/
+  //#region Province/City
   async getProvinces() {
     return await this.database.models.province.findAll();
   }
