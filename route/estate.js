@@ -3,12 +3,11 @@ const router = require("express").Router();
 const requestHandler = require("../middleware/requestHandler");
 
 const getAllController = require("../controller/estate/getAll");
-const verifyController = require("../controller/estate/verify");
 const getController = require("../controller/estate/get");
 const postController = require("../controller/estate/add");
+// const updateController = require("../controller/estate/update");
 
 router.get("/all", requestHandler(getAllController)); // should get filter query
-router.get("/verify/:id", requestHandler(verifyController));
 router.get("/:id", requestHandler(getController));
 router.post("/:estate_type/:sale_method/add", requestHandler(postController));
 // router.put("/update/:id", requestHandler(updateController));
