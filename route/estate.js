@@ -3,6 +3,7 @@ const router = require("express").Router();
 const requestHandler = require("../middleware/requestHandler");
 
 const getAllController = require("../controller/estate/getAll");
+const userEstatesController = require("../controller/estate/userEstates");
 const activeController = require("../controller/estate/active");
 const soldController = require("../controller/estate/sold");
 const getController = require("../controller/estate/get");
@@ -11,6 +12,7 @@ const updateController = require("../controller/estate/update");
 const deleteController = require("../controller/estate/delete");
 
 router.get("/all", requestHandler(getAllController)); // should get filter query
+router.get("/all/:user_id", requestHandler(userEstatesController));
 router.get("/active/:id", requestHandler(activeController));
 router.get("/sold/:id", requestHandler(soldController));
 router.get("/:id", requestHandler(getController));

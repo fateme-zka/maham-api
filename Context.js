@@ -185,9 +185,11 @@ module.exports = class Context {
   //#endregion
 
   //#region Estate
-  async getEstates() {
+  async getEstates(user_id) {
+    let where = { verified: true, sold: false, active: true };
+    if (user_id) where.user_id = user_id;
     return this.database.models.estate.findAll({
-      where: { verified: true, sold: false, active: true },
+      where,
       limit: 30,
     });
   }
