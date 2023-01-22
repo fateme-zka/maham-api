@@ -143,6 +143,13 @@ module.exports = class Context {
       cover_image,
     });
   }
+  async updateUser(id, fields) {
+    let values = {};
+    Object.keys(fields).forEach((key) => {
+      if (fields[key]) values[key] = fields[key];
+    });
+    return await this.database.models.user.update(values, { where: { id } });
+  }
   //#endregion
 
   //#region Role
