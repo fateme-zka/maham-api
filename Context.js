@@ -399,6 +399,21 @@ module.exports = class Context {
   }
   //#endregion
 
+  //#region Estate Reaction
+  async likeEstate(estate_id, user_id) {
+    let like = await this.database.models.like.findOne({
+      where: { user_id, estate_id },
+    });
+    if (!like)
+      return await this.database.models.like.create({ user_id, estate_id });
+  }
+  async countLikes(estate_id) {
+    return await this.database.models.like.count({
+      where: { estate_id },
+    });
+  }
+  //#endregion
+
   //#region Province/City
   async getProvinces() {
     return await this.database.models.province.findAll();
