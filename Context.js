@@ -400,8 +400,14 @@ module.exports = class Context {
   //#endregion
 
   //#region Estate Reaction
-  async likeEstate(estate_id, user_id) {
-    let like = await this.database.models.like.findOne({
+  async likeEstate(estate_id, user_id, like) {
+    if (!like) {
+      await this.database.models.like.destroy({
+        where: { user_id, estate_id },
+      });
+      return;
+    }
+    like = await this.database.models.like.findOne({
       where: { user_id, estate_id },
     });
     if (!like)
@@ -411,6 +417,13 @@ module.exports = class Context {
     return await this.database.models.like.count({
       where: { estate_id },
     });
+  }
+  async checkLike(estate_id, user_id) {
+    let like = await this.database.models.like.findOne({
+      where: { user_id, estate_id },
+    });
+    if (like) return { like: true };
+    return { like: false };
   }
   //#endregion
 
