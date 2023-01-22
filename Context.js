@@ -425,6 +425,36 @@ module.exports = class Context {
     if (like) return { like: true };
     return { like: false };
   }
+  async bookmarkEstate(estate_id, user_id, bookmark) {
+    if (!bookmark) {
+      await this.database.models.bookmark.destroy({
+        where: { user_id, estate_id },
+      });
+      return;
+    }
+    bookmark = await this.database.models.bookmark.findOne({
+      where: { user_id, estate_id },
+    });
+    if (!bookmark)
+      return await this.database.models.bookmark.create({ user_id, estate_id });
+  }
+  async checkBookmark(estate_id, user_id) {
+    let bookmark = await this.database.models.bookmark.findOne({
+      where: { user_id, estate_id },
+    });
+    if (bookmark) return { bookmark: true };
+    return { bookmark: false };
+  }
+  async getBookmarkedEstates(user_id) {
+    let estate_ids = [];
+    let bookmarks = await this.database.models.bookmark.findAll({
+      where: { user_id },
+    });
+    bookmarks.map((bookmark) => estate_ids.push(bookmark.estate_id));
+    return await this.database.models.estate.findAll({
+      where: { id: estate_ids },
+    });
+  }
   //#endregion
 
   //#region Province/City
