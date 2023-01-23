@@ -7,5 +7,6 @@ router.use("/province", require("./province"));
 router.use("/city", require("./city"));
 router.use("/like", require("./like"));
 router.use("/bookmark", require("./bookmark"));
+router.use("/comment", require("./comment"));
 
 module.exports = router;

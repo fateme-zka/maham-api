@@ -19,6 +19,7 @@ module.exports = class Context {
     const Bookmark = require("./model/Bookmark");
     const Province = require("./model/Province");
     const City = require("./model/City");
+    const Comment = require("./model/Comment");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
@@ -32,6 +33,7 @@ module.exports = class Context {
     const bookmark = Bookmark(this.database, Sequelize.DataTypes);
     const province = Province(this.database, Sequelize.DataTypes);
     const city = City(this.database, Sequelize.DataTypes);
+    const comment = Comment(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(role, {
@@ -75,6 +77,12 @@ module.exports = class Context {
     });
     session.belongsTo(role, {
       foreignKey: { name: "role_id", allowNull: false },
+    });
+    comment.belongsTo(user, {
+      foreignKey: { name: "user_id", allowNull: false },
+    });
+    comment.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
     });
 
     this.database.sync({ force: false });
@@ -454,6 +462,28 @@ module.exports = class Context {
     return await this.database.models.estate.findAll({
       where: { id: estate_ids },
     });
+  }
+  async getComments(estate_id) {
+    return await this.database.models.comment.findAll({
+      where: { estate_id, verified: true },
+    });
+  }
+  async verifyComment(id) {
+    return await this.database.models.comment.update(
+      { verified: true },
+      { where: { id } }
+    );
+  }
+  async addComment(estate_id, user_id, text) {
+    return await this.database.models.comment.create({
+      estate_id,
+      user_id,
+      text,
+      verified: false,
+    });
+  }
+  async deleteComment(id) {
+    await this.database.models.comment.destroy({ where: { id } });
   }
   //#endregion
 
