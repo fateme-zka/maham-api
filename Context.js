@@ -20,6 +20,7 @@ module.exports = class Context {
     const Province = require("./model/Province");
     const City = require("./model/City");
     const Comment = require("./model/Comment");
+    const Score = require("./model/Score");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
@@ -34,6 +35,7 @@ module.exports = class Context {
     const province = Province(this.database, Sequelize.DataTypes);
     const city = City(this.database, Sequelize.DataTypes);
     const comment = Comment(this.database, Sequelize.DataTypes);
+    const score = Score(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(role, {
@@ -78,11 +80,17 @@ module.exports = class Context {
     session.belongsTo(role, {
       foreignKey: { name: "role_id", allowNull: false },
     });
+    comment.belongsTo(estate, {
+      foreignKey: { name: "estate_id", allowNull: false },
+    });
     comment.belongsTo(user, {
       foreignKey: { name: "user_id", allowNull: false },
     });
-    comment.belongsTo(estate, {
+    score.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
+    });
+    score.belongsTo(user, {
+      foreignKey: { name: "user_id", allowNull: false },
     });
 
     this.database.sync({ force: false });
@@ -484,6 +492,20 @@ module.exports = class Context {
   }
   async deleteComment(id) {
     await this.database.models.comment.destroy({ where: { id } });
+  }
+  async addScore(estate_id, user_id, star) {
+    return await this.database.models.score.create({
+      estate_id,
+      user_id,
+      star,
+    });
+  }
+  async countScores(estate_id) {
+    let bind = { estate_id };
+    let query = `SELECT COUNT(*), SUM(star) FROM score WHERE estate_id=$estate_id;`;
+    let [result] = await this.database.query(query, { bind });
+    let rate = result[0]["SUM(star)"] / result[0]["COUNT(*)"];
+    return { rate };
   }
   //#endregion
 
