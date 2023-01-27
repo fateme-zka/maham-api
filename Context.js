@@ -200,7 +200,44 @@ module.exports = class Context {
   }
   //#endregion
 
+  //#region Province/City
+  async getProvinces() {
+    return await this.database.models.province.findAll();
+  }
+  async getCities(province_id) {
+    return await this.database.models.city.findAll({ where: { province_id } });
+  }
+  //#endregion
+
   //#region Estate
+  whereEstates(estate_type_id, sale_method, meter, room_count, province_id, city_id, min_price, max_price, where) {
+    if(!where) where = {};
+    if (estate_type_id) where.estate_type_id = estate_type_id; 
+    if (sale_method) where.sale_method = sale_method;
+    if (meter) {
+      let or = {[Op.or]: [{land_size_meter: meter}, {buliding_size_meter: meter}]};
+      where = { ...where, ...or };
+    }; 
+    if (room_count) where.room_count = room_count; 
+    if (province_id) where.province_id = province_id; 
+    if (city_id) where.city_id = city_id; 
+    if (min_price && max_price){
+      // todo
+    };
+    if (min_price) {
+      // to do
+      let or = {[Op.or]: [
+        { pawn_price: { [Op.gte]: min_price } },
+        { rent_price: { [Op.gte]: min_price } },
+      ]
+      };
+      where = { ...where, ...or };
+    }; 
+    if (max_price) {
+      // todo
+    } ;
+    return where;
+  }
   async getEstates(user_id) {
     let where = { verified: true, sold: false, active: true };
     if (user_id) where.user_id = user_id;
@@ -506,15 +543,6 @@ module.exports = class Context {
     let [result] = await this.database.query(query, { bind });
     let rate = result[0]["SUM(star)"] / result[0]["COUNT(*)"];
     return { rate };
-  }
-  //#endregion
-
-  //#region Province/City
-  async getProvinces() {
-    return await this.database.models.province.findAll();
-  }
-  async getCities(province_id) {
-    return await this.database.models.city.findAll({ where: { province_id } });
   }
   //#endregion
 };
