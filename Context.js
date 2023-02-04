@@ -464,6 +464,12 @@ module.exports = class Context {
     if (sold) options.sold = sold == "true";
     return await this.database.models.estate.update(options, { where: { id } });
   }
+  async transferEstate(id, receiver_id) {
+    return await this.database.models.estate.update(
+      { user_id: receiver_id },
+      { where: { id } }
+    );
+  }
   //#endregion
 
   //#region Estate Type
