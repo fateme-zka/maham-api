@@ -139,6 +139,11 @@ module.exports = class Context {
       },
     });
   }
+  async getConsultantsOrAdmins() {
+    return await this.database.models.user.findAll({
+      attributes: ["id", "username", "first_name", "last_name"],
+    });
+  }
   async registerUser(
     role_id,
     admin,
