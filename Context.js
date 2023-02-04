@@ -21,6 +21,7 @@ module.exports = class Context {
     const City = require("./model/City");
     const Comment = require("./model/Comment");
     const Score = require("./model/Score");
+    const Message = require("./model/Message");
 
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
@@ -36,6 +37,7 @@ module.exports = class Context {
     const city = City(this.database, Sequelize.DataTypes);
     const comment = Comment(this.database, Sequelize.DataTypes);
     const score = Score(this.database, Sequelize.DataTypes);
+    const message = Message(this.database, Sequelize.DataTypes);
 
     // ForeignKeys
     user.belongsTo(role, {
@@ -91,6 +93,12 @@ module.exports = class Context {
     });
     score.belongsTo(user, {
       foreignKey: { name: "user_id", allowNull: false },
+    });
+    message.belongsTo(user, {
+      foreignKey: { name: "sender_id", allowNull: false },
+    });
+    message.belongsTo(user, {
+      foreignKey: { name: "receiver_id", allowNull: false },
     });
 
     this.database.sync({ force: false });
@@ -210,32 +218,45 @@ module.exports = class Context {
   //#endregion
 
   //#region Estate
-  whereEstates(estate_type_id, sale_method, meter, room_count, province_id, city_id, min_price, max_price, where) {
-    if(!where) where = {};
-    if (estate_type_id) where.estate_type_id = estate_type_id; 
+  whereEstates(
+    estate_type_id,
+    sale_method,
+    meter,
+    room_count,
+    province_id,
+    city_id,
+    min_price,
+    max_price,
+    where
+  ) {
+    if (!where) where = {};
+    if (estate_type_id) where.estate_type_id = estate_type_id;
     if (sale_method) where.sale_method = sale_method;
     if (meter) {
-      let or = {[Op.or]: [{land_size_meter: meter}, {buliding_size_meter: meter}]};
-      where = { ...where, ...or };
-    }; 
-    if (room_count) where.room_count = room_count; 
-    if (province_id) where.province_id = province_id; 
-    if (city_id) where.city_id = city_id; 
-    if (min_price && max_price){
-      // todo
-    };
-    if (min_price) {
-      // to do
-      let or = {[Op.or]: [
-        { pawn_price: { [Op.gte]: min_price } },
-        { rent_price: { [Op.gte]: min_price } },
-      ]
+      let or = {
+        [Op.or]: [{ land_size_meter: meter }, { buliding_size_meter: meter }],
       };
       where = { ...where, ...or };
-    }; 
+    }
+    if (room_count) where.room_count = room_count;
+    if (province_id) where.province_id = province_id;
+    if (city_id) where.city_id = city_id;
+    if (min_price && max_price) {
+      // todo
+    }
+    if (min_price) {
+      // to do
+      let or = {
+        [Op.or]: [
+          { pawn_price: { [Op.gte]: min_price } },
+          { rent_price: { [Op.gte]: min_price } },
+        ],
+      };
+      where = { ...where, ...or };
+    }
     if (max_price) {
       // todo
-    } ;
+    }
     return where;
   }
   async getEstates(user_id) {
@@ -543,6 +564,42 @@ module.exports = class Context {
     let [result] = await this.database.query(query, { bind });
     let rate = result[0]["SUM(star)"] / result[0]["COUNT(*)"];
     return { rate };
+  }
+  //#endregion
+
+  //#region Message
+  async getMessages(allOrNotSeen, receiver_id) {
+    if (allOrNotSeen) {
+      return await this.database.models.message.findAll({
+        where: { receiver_id },
+        include: {
+          model: this.database.models.user,
+          as: "sender",
+        },
+      });
+    }
+    return await this.database.models.message.findAll({
+      where: { receiver_id, seen: false },
+      include: {
+        model: this.database.models.user,
+        as: "sender",
+      },
+    });
+  }
+  async sendMessage(sender_id, receiver_id, title, text) {
+    return await this.database.models.message.create({
+      sender_id,
+      receiver_id,
+      title,
+      text,
+      seen: false,
+    });
+  }
+  async seenMessage(id, receiver_id) {
+    return await this.database.models.message.update(
+      { seen: true },
+      { where: { id, receiver_id } }
+    );
   }
   //#endregion
 };
