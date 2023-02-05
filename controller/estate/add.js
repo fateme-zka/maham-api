@@ -14,6 +14,7 @@ const body_schema = Joi.object({
   loan: Joi.boolean().allow(""),
   document_type: Joi.string().allow(""),
   //sale
+  total_price: Joi.number().positive().allow(""),
   pawn_price: Joi.number().positive().allow(""),
   rent_price: Joi.number().positive().allow(""),
   meter_price: Joi.number().positive().allow(""),
@@ -76,6 +77,7 @@ const handler = async function (req) {
     buliding_size_meter,
     loan,
     document_type,
+    total_price,
     pawn_price,
     rent_price,
     meter_price,
@@ -143,6 +145,7 @@ const handler = async function (req) {
     loan,
     document_type,
     sale_method,
+    total_price,
     pawn_price,
     rent_price,
     meter_price,
