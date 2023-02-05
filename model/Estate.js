@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     total_price: { type: DataTypes.INTEGER, allowNull: true },
+    meter_price: { type: DataTypes.INTEGER, allowNull: true },
     pawn_price: { type: DataTypes.INTEGER, allowNull: true },
     rent_price: { type: DataTypes.INTEGER, allowNull: true },
-    meter_price: { type: DataTypes.INTEGER, allowNull: true },
     // status
     verified: {
       type: DataTypes.BOOLEAN,

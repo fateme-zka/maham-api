@@ -224,19 +224,25 @@ module.exports = class Context {
 
   //#region Estate
   whereEstates(
-    estate_type_id,
     sale_method,
+    estate_type_id,
     meter,
     room_count,
     province_id,
     city_id,
-    min_price,
-    max_price,
+    total_min_price,
+    total_max_price,
+    meter_min_price,
+    meter_max_price,
+    pawn_min_price,
+    pawn_max_price,
+    rent_min_price,
+    rent_max_price,
     where
   ) {
     if (!where) where = {};
-    if (estate_type_id) where.estate_type_id = estate_type_id;
     if (sale_method) where.sale_method = sale_method;
+    if (estate_type_id) where.estate_type_id = estate_type_id;
     if (meter) {
       let or = {
         [Op.or]: [{ land_size_meter: meter }, { buliding_size_meter: meter }],
@@ -246,30 +252,55 @@ module.exports = class Context {
     if (room_count) where.room_count = room_count;
     if (province_id) where.province_id = province_id;
     if (city_id) where.city_id = city_id;
-    if (min_price && max_price) {
-      // todo
-    }
-    if (min_price) {
-      // to do
-      let or = {
-        [Op.or]: [
-          { pawn_price: { [Op.gte]: min_price } },
-          { rent_price: { [Op.gte]: min_price } },
-        ],
-      };
-      where = { ...where, ...or };
-    }
-    if (max_price) {
-      // todo
-    }
+    if (total_min_price) where.total_price = { [Op.gte]: total_min_price };
+    if (total_max_price) where.total_price = { [Op.lte]: total_max_price };
+    if (meter_min_price) where.meter_price = { [Op.gte]: meter_min_price };
+    if (meter_max_price) where.meter_price = { [Op.lte]: meter_max_price };
+    if (pawn_min_price) where.pawn_price = { [Op.gte]: pawn_min_price };
+    if (pawn_max_price) where.pawn_price = { [Op.lte]: pawn_max_price };
+    if (rent_min_price) where.rent_price = { [Op.gte]: rent_min_price };
+    if (rent_max_price) where.rent_price = { [Op.lte]: rent_max_price };
     return where;
   }
-  async getEstates(user_id) {
+  async getEstates(
+    user_id,
+    sale_method,
+    estate_type_id,
+    meter,
+    room_count,
+    province_id,
+    city_id,
+    total_min_price,
+    total_max_price,
+    meter_min_price,
+    meter_max_price,
+    pawn_min_price,
+    pawn_max_price,
+    rent_min_price,
+    rent_max_price
+  ) {
     let where = { verified: true, sold: false, active: true };
+    where = this.whereEstates(
+      sale_method,
+      estate_type_id,
+      meter,
+      room_count,
+      province_id,
+      city_id,
+      total_min_price,
+      total_max_price,
+      meter_min_price,
+      meter_max_price,
+      pawn_min_price,
+      pawn_max_price,
+      rent_min_price,
+      rent_max_price,
+      where
+    );
     if (user_id) where.user_id = user_id;
     return this.database.models.estate.findAll({
       where,
-      limit: 30,
+      limit: 30, // todo pagination
     });
   }
   async getEstate(id) {
@@ -311,9 +342,9 @@ module.exports = class Context {
     document_type,
     sale_method,
     total_price,
+    meter_price,
     pawn_price,
     rent_price,
-    meter_price,
     verified,
     sold,
     active,
@@ -376,9 +407,9 @@ module.exports = class Context {
       document_type,
       sale_method,
       total_price,
+      meter_price,
       pawn_price,
       rent_price,
-      meter_price,
       verified,
       sold,
       active,
