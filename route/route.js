@@ -10,5 +10,6 @@ router.use("/bookmark", require("./bookmark"));
 router.use("/comment", require("./comment"));
 router.use("/score", require("./score"));
 router.use("/message", require("./message"));
+router.use("/password", require("./password"));
 
 module.exports = router;
