@@ -11,6 +11,11 @@ const handler = async function (req) {
   let { username, password } = req.body;
   let user = await req.context.getUser("username", username);
 
+  // check subscription_date
+  let currentDate = new Date().toJSON().slice(0, 10);
+  if (currentDate >= process.env.subscription_expired_date)
+    req.throw(403, "Your yearly subscription is finished please try to charge it immediately.")
+
   if (!user) req.throw(404, "Username does not exist.");
 
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
