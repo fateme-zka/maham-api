@@ -50,14 +50,11 @@ const handler = async function (req) {
     image,
     cover_image
   );
-  let session = await req.context.createSession(user.id, role_id, false);
   const payload = {
     user_id: user.id,
-    role_id,
-    admin: false,
-    session_id: session.id,
+    created_at: new Date()
   };
-  const token = Jwt.sign(payload, process.env.jwt_key);
+  const token = Jwt.sign(payload, process.env.jwt_key, { expiresIn: '2d' });
   return { token, user };
 };
 

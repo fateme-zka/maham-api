@@ -44,16 +44,10 @@ module.exports = (controller) => async (req, res) => {
       }
     }
 
-    // user
-    req.getUser = async () => {
-      req.user = await req.context.getUser("id", req.session.user_id);
-      return req.user;
-    };
 
     // check for auth
     if (controller.auth) {
-      req.session = await token_parser(req, process.env.jwt_key);
-      req.user = await req.getUser();
+      req.user = await token_parser(req, process.env.jwt_key);
       // auth consultant
       if (controller.auth_consultant)
         if (req.user.role_id == process.env.customer_id)

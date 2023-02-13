@@ -1,7 +1,7 @@
 const Jwt = require("jsonwebtoken");
 
 async function token_parser(req, jwt_key) {
-  let token = req.headers["auth-jwt"];
+  let token = req.headers["x-maham-jwt"];
   if (!token) req.throw(403, "No Token.");
 
   // decode
@@ -12,11 +12,10 @@ async function token_parser(req, jwt_key) {
     req.throw(403, "Bad Token.");
   }
 
-  let session = await req.context.database.models.session.findOne({
-    where: { id: decoded.session_id },
-  });
-  if (!session) req.throw(403, "Expired Token.");
-  return session;
+  let user = await req.context.getUser("id", decoded.user_id);
+
+  // if (!session) req.throw(403, "Expired Token.");
+  return user;
 }
 
 module.exports = { token_parser };

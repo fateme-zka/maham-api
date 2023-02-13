@@ -53,15 +53,7 @@ const handler = async function (req) {
     image,
     cover_image
   );
-  let session = await req.context.createSession(user.id, role_id, admin);
-  const payload = {
-    user_id: user.id,
-    role_id: user.role_id,
-    admin: user.admin,
-    session_id: session.id,
-  };
-  const token = Jwt.sign(payload, process.env.jwt_key);
-  return { token, user };
+  return { user };
 };
 
 module.exports = { handler, body_schema, auth: true, auth_admin: true };

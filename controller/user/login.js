@@ -16,19 +16,11 @@ const handler = async function (req) {
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
   if (user.password !== password) req.throw(400, "Invalid password.");
 
-  let session = await req.context.createSession(
-    user.id,
-    user.role_id,
-    user.admin
-  );
-
   const payload = {
     user_id: user.id,
-    role_id: user.role_id,
-    admin: user.admin,
-    session_id: session.id,
+    created_at: new Date()
   };
-  const token = Jwt.sign(payload, process.env.jwt_key);
+  const token = Jwt.sign(payload, process.env.jwt_key, { expiresIn: '2d' });
   return { token, user };
 };
 

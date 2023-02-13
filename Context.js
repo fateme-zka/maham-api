@@ -10,7 +10,6 @@ module.exports = class Context {
     // Models
     const User = require("./model/User");
     const Role = require("./model/Role");
-    const Session = require("./model/Session");
     const Estate = require("./model/Estate");
     const EstateType = require("./model/EstateType");
     const EstateImage = require("./model/EstateImage");
@@ -26,7 +25,6 @@ module.exports = class Context {
     // Tables
     const user = User(this.database, Sequelize.DataTypes);
     const role = Role(this.database, Sequelize.DataTypes);
-    const session = Session(this.database, Sequelize.DataTypes);
     const estate = Estate(this.database, Sequelize.DataTypes);
     const estate_type = EstateType(this.database, Sequelize.DataTypes);
     const estate_image = EstateImage(this.database, Sequelize.DataTypes);
@@ -75,12 +73,6 @@ module.exports = class Context {
     });
     city.belongsTo(province, {
       foreignKey: { name: "province_id", allowNull: false },
-    });
-    session.belongsTo(user, {
-      foreignKey: { name: "user_id", allowNull: false },
-    });
-    session.belongsTo(role, {
-      foreignKey: { name: "role_id", allowNull: false },
     });
     comment.belongsTo(estate, {
       foreignKey: { name: "estate_id", allowNull: false },
@@ -139,11 +131,13 @@ module.exports = class Context {
       },
     });
   }
+
   async getConsultantsOrAdmins() {
     return await this.database.models.user.findAll({
       attributes: ["id", "username", "first_name", "last_name"],
     });
   }
+
   async registerUser(
     role_id,
     admin,
@@ -172,6 +166,7 @@ module.exports = class Context {
       cover_image,
     });
   }
+
   async updateUser(id, fields) {
     let values = {};
     Object.keys(fields).forEach((key) => {
@@ -190,33 +185,11 @@ module.exports = class Context {
   }
   //#endregion
 
-  //#region Session
-  async createSession(user_id, role_id, admin) {
-    let session = await this.database.models.session.findOne({
-      where: {
-        user_id,
-        role_id,
-        admin,
-      },
-    });
-    if (!session) {
-      session = await this.database.models.session.create({
-        user_id,
-        role_id,
-        admin,
-      });
-    }
-    return session;
-  }
-  async deleteSession(id) {
-    await this.database.models.session.destroy({ where: { id } });
-  }
-  //#endregion
-
   //#region Province/City
   async getProvinces() {
     return await this.database.models.province.findAll();
   }
+
   async getCities(province_id) {
     return await this.database.models.city.findAll({ where: { province_id } });
   }
@@ -262,6 +235,7 @@ module.exports = class Context {
     if (rent_max_price) where.rent_price = { [Op.lte]: rent_max_price };
     return where;
   }
+
   async getEstates(
     user_id,
     sale_method,
@@ -303,6 +277,7 @@ module.exports = class Context {
       limit: 30, // todo pagination
     });
   }
+
   async getEstate(id) {
     let estate = await this.getModel("estate", {
       where: { id },
@@ -325,6 +300,7 @@ module.exports = class Context {
     }
     return estate;
   }
+
   async addEstate(
     estate_type_id,
     user_id,
@@ -462,12 +438,14 @@ module.exports = class Context {
     });
     return estate;
   }
+
   async verifyEstate(id) {
     return await this.database.models.estate.update(
       { verified: true },
       { where: { id } }
     );
   }
+
   async updateEstate(id, images, fields) {
     let values = {};
     Object.keys(fields).forEach((key) => {
@@ -488,15 +466,18 @@ module.exports = class Context {
     });
     return estate;
   }
+
   async deleteEstate(id) {
     await this.database.models.estate.destroy({ where: { id } });
   }
+
   async switchStatusEstate(id, active, sold) {
     let options = {};
     if (active) options.active = active == "true";
     if (sold) options.sold = sold == "true";
     return await this.database.models.estate.update(options, { where: { id } });
   }
+
   async transferEstate(id, receiver_id) {
     return await this.database.models.estate.update(
       { user_id: receiver_id },
@@ -531,11 +512,13 @@ module.exports = class Context {
     if (!like)
       return await this.database.models.like.create({ user_id, estate_id });
   }
+
   async countLikes(estate_id) {
     return await this.database.models.like.count({
       where: { estate_id },
     });
   }
+
   async checkLike(estate_id, user_id) {
     let like = await this.database.models.like.findOne({
       where: { user_id, estate_id },
@@ -543,6 +526,7 @@ module.exports = class Context {
     if (like) return { like: true };
     return { like: false };
   }
+
   async bookmarkEstate(estate_id, user_id, bookmark) {
     if (!bookmark) {
       await this.database.models.bookmark.destroy({
@@ -556,6 +540,7 @@ module.exports = class Context {
     if (!bookmark)
       return await this.database.models.bookmark.create({ user_id, estate_id });
   }
+
   async checkBookmark(estate_id, user_id) {
     let bookmark = await this.database.models.bookmark.findOne({
       where: { user_id, estate_id },
@@ -563,6 +548,7 @@ module.exports = class Context {
     if (bookmark) return { bookmark: true };
     return { bookmark: false };
   }
+
   async getBookmarkedEstates(user_id) {
     let estate_ids = [];
     let bookmarks = await this.database.models.bookmark.findAll({
@@ -573,17 +559,20 @@ module.exports = class Context {
       where: { id: estate_ids },
     });
   }
+
   async getComments(estate_id) {
     return await this.database.models.comment.findAll({
       where: { estate_id, verified: true },
     });
   }
+
   async verifyComment(id) {
     return await this.database.models.comment.update(
       { verified: true },
       { where: { id } }
     );
   }
+
   async addComment(estate_id, user_id, text) {
     return await this.database.models.comment.create({
       estate_id,
@@ -592,9 +581,11 @@ module.exports = class Context {
       verified: false,
     });
   }
+
   async deleteComment(id) {
     await this.database.models.comment.destroy({ where: { id } });
   }
+
   async addScore(estate_id, user_id, star) {
     return await this.database.models.score.create({
       estate_id,
@@ -602,6 +593,7 @@ module.exports = class Context {
       star,
     });
   }
+
   async countScores(estate_id) {
     let bind = { estate_id };
     let query = `SELECT COUNT(*), SUM(star) FROM score WHERE estate_id=$estate_id;`;
@@ -630,6 +622,7 @@ module.exports = class Context {
       },
     });
   }
+
   async sendMessage(sender_id, receiver_id, title, text) {
     return await this.database.models.message.create({
       sender_id,
@@ -639,6 +632,7 @@ module.exports = class Context {
       seen: false,
     });
   }
+
   async seenMessage(id, receiver_id) {
     return await this.database.models.message.update(
       { seen: true },
