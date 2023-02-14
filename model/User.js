@@ -13,5 +13,14 @@ module.exports = (sequelize, DataTypes) => {
     email: { type: DataTypes.STRING, allowNull: true },
     image: { type: DataTypes.STRING, allowNull: true },
     cover_image: { type: DataTypes.STRING, allowNull: true },
+    e_otp: { type: DataTypes.STRING(6), allowNull: true, secure: true },
+    e_otp_time: { type: 'TIMESTAMP', allowNull: true, defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), secure: true },
+    e_otp_attempt: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, secure: true },
+    e_try_attempt: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, secure: true },
+    e_approved: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: false },
+    f_otp: { type: DataTypes.STRING(18), allowNull: true, secure: true },
+    f_otp_time: { type: 'TIMESTAMP', allowNull: true, defaultValue: sequelize.literal('CURRENT_TIMESTAMP'), secure: true },
+    f_otp_attempt: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, secure: true },
+    f_try_attempt: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false, secure: true },
   });
 };

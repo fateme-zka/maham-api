@@ -5,7 +5,7 @@ const { onSafeVerify } = require('../../util/otp_operation');
 const body_schema = Joi.object({
     user_id: Joi.number().required(),
     hash: Joi.string().required(),
-    pass_new: Joi.string().required(),
+    pass_new: Joi.string().min(6).required(),
     pass_rep: Joi.any().equal(Joi.ref('pass_new')).required()
         .messages({ 'any.only': '"Confirm password" does not match.' })
 });
@@ -16,7 +16,7 @@ const handler = async (req) => {
         hash,
         pass_new
     } = req.body;
-    let user = await req.context.getUser(user_id);
+    let user = await req.context.getUser("id", user_id);
 
     return await onSafeVerify(
         req, 
