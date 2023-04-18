@@ -4,6 +4,7 @@ const requestHandler = require("../middleware/requestHandler");
 
 const getAllController = require("../controller/estate/getAll");
 const userEstatesController = require("../controller/estate/userEstates");
+const getAllTypesController = require("../controller/estate/getAllTypes");
 const activeController = require("../controller/estate/active");
 const soldController = require("../controller/estate/sold");
 const getController = require("../controller/estate/get");
@@ -14,6 +15,7 @@ const deleteController = require("../controller/estate/delete");
 
 router.get("/all", requestHandler(getAllController)); // should get filter query
 router.get("/all/:user_id", requestHandler(userEstatesController));
+router.get("/type/all", requestHandler(getAllTypesController)); // should get filter query
 router.get("/active/:id", requestHandler(activeController));
 router.get("/sold/:id", requestHandler(soldController));
 router.get("/:id", requestHandler(getController));

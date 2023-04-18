@@ -278,6 +278,10 @@ module.exports = class Context {
     });
   }
 
+  async getEstateTypes() {
+	return this.database.models.estate_type.findAll();
+  }
+
   async getEstate(id) {
     let estate = await this.getModel("estate", {
       where: { id },
