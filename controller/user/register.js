@@ -7,7 +7,7 @@ const body_schema = Joi.object({
   username: Joi.string().min(4).required(),
   password: Joi.string().min(6).alphanum().required(),
   first_name: Joi.string().required(),
-  last_name: Joi.string().allow(null),
+  last_name: Joi.string().required(),
   phone_number: Joi.string().max(13).required(),
   email: Joi.string().email().allow(null),
   image: Joi.string().allow(null),
