@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) =>
 {
 	return Base(sequelize, DataTypes, "user", {
 		id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
-		role_id: { type: DataTypes.INTEGER, allowNull: false },
+		user_role_id: { type: DataTypes.INTEGER, allowNull: false },
 		admin: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 		password: { type: DataTypes.STRING, allowNull: false, secure: true },
 		name: { type: DataTypes.STRING, allowNull: false },

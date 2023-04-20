@@ -12,7 +12,7 @@ module.exports = class Context
 	{
 		// Models
 		const User = require("./model/User");
-		const Role = require("./model/Role");
+		const UserRole = require("./model/UserRole");
 		const Estate = require("./model/Estate");
 		const EstateType = require("./model/EstateType");
 		const EstateImage = require("./model/EstateImage");
@@ -27,7 +27,7 @@ module.exports = class Context
 
 		// Tables
 		const user = User(this.database, Sequelize.DataTypes);
-		const role = Role(this.database, Sequelize.DataTypes);
+		const user_role = UserRole(this.database, Sequelize.DataTypes);
 		const estate = Estate(this.database, Sequelize.DataTypes);
 		const estate_type = EstateType(this.database, Sequelize.DataTypes);
 		const estate_image = EstateImage(this.database, Sequelize.DataTypes);
@@ -41,8 +41,8 @@ module.exports = class Context
 		const message = Message(this.database, Sequelize.DataTypes);
 
 		// ForeignKeys
-		user.belongsTo(role, {
-			foreignKey: { name: "role_id", allowNull: false },
+		user.belongsTo(user_role, {
+			foreignKey: { name: "user_role_id", allowNull: false },
 		});
 		estate.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
@@ -135,8 +135,8 @@ module.exports = class Context
 		return await this.getModel("user", {
 			where,
 			include: {
-				model: this.database.models.role,
-				as: "role",
+				model: this.database.models.user_role,
+				as: "user_role",
 			},
 		});
 	}
@@ -149,7 +149,7 @@ module.exports = class Context
 	}
 
 	async registerUser(
-		role_id,
+		user_role_id,
 		admin,
 		username,
 		password,
@@ -165,7 +165,7 @@ module.exports = class Context
 		if (last_name) last_name = last_name.trim();
 		if (email) email = email.trim();
 		return await this.database.models.user.create({
-			role_id,
+			user_role_id,
 			admin,
 			username,
 			password,
@@ -189,13 +189,13 @@ module.exports = class Context
 	}
 	//#endregion
 
-	//#region Role
-	async getRole(id, name)
+	//#region UserRole
+	async getUserRole(id, name)
 	{
 		let where = {};
 		if (id) where.id = id;
 		if (name) where.name = { [Sequelize.Op.like]: "%" + name.trim() + "%" };
-		return await this.database.models.role.findOne({ where });
+		return await this.database.models.user_role.findOne({ where });
 	}
 	//#endregion
 

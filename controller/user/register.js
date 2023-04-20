@@ -25,7 +25,7 @@ const handler = async function (req) {
     image,
     cover_image,
   } = req.body;
-  let role_id = parseInt(process.env.customer_id);
+  let user_role_id = parseInt(process.env.customer_id);
   // check username
   let user = await req.context.getUser("username", username);
   if (user) req.throw(400, "Username already exists.");
@@ -39,7 +39,7 @@ const handler = async function (req) {
   // hash password
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
   user = await req.context.registerUser(
-    role_id,
+    user_role_id,
     false,
     username,
     password,

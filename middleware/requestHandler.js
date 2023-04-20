@@ -50,7 +50,7 @@ module.exports = (controller) => async (req, res) => {
       req.user = await token_parser(req, process.env.jwt_key);
       // auth consultant
       if (controller.auth_consultant)
-        if (req.user.role_id == process.env.customer_id)
+        if (req.user.user_role_id == process.env.customer_id)
           req.throw(401, "Customers have no access!");
       // auth admin
       if (controller.auth_admin) {
