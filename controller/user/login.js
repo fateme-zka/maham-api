@@ -3,20 +3,20 @@ const Bcrypt = require("bcrypt");
 const Jwt = require("jsonwebtoken");
 
 const body_schema = Joi.object({
-  username: Joi.string().required(),
+  email: Joi.string().email().required(),
   password: Joi.string().min(6).alphanum().required(),
 });
 
 const handler = async function (req) {
-  let { username, password } = req.body;
-  let user = await req.context.getUser("username", username);
+  let { email, password } = req.body;
+  let user = await req.context.getUser("email", email);
 
   // check subscription_date
   let currentDate = new Date().toJSON().slice(0, 10);
   if (currentDate >= process.env.subscription_expired_date)
     req.throw(403, "Your yearly subscription is finished please try to charge it immediately.")
 
-  if (!user) req.throw(404, "Username does not exist.");
+  if (!user) req.throw(404, "Username (email) does not exist.");
 
   password = await Bcrypt.hash(password, process.env.bcrypt_salt);
   if (user.password !== password) req.throw(400, "Invalid password.");
