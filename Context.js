@@ -130,7 +130,7 @@ module.exports = class Context
 	{
 		let where = {};
 		if (column == "id") where = { id: value };
-		else if (column == "username") where = { username: value };
+		else if (column == "email") where = { email: value };
 		else if (column == "phone_number") where = { phone_number: value };
 		return await this.getModel("user", {
 			where,
@@ -144,37 +144,32 @@ module.exports = class Context
 	async getConsultantsOrAdmins()
 	{
 		return await this.database.models.user.findAll({
-			attributes: ["id", "username", "first_name", "last_name"],
+			attributes: ["id", "email", "name"],
 		});
 	}
 
 	async registerUser(
 		user_role_id,
 		admin,
-		username,
-		password,
-		first_name,
-		last_name,
-		phone_number,
 		email,
+		password,
+		name,
+		phone_number,
 		image,
 		cover_image
 	)
 	{
-		first_name = first_name.trim();
-		if (last_name) last_name = last_name.trim();
-		if (email) email = email.trim();
+		name = name.trim();
+		email = email.trim();
 		return await this.database.models.user.create({
 			user_role_id,
 			admin,
-			username,
-			password,
-			first_name,
-			last_name,
-			phone_number,
 			email,
+			password,
+			name,
+			phone_number,
 			image,
-			cover_image,
+			cover_image
 		});
 	}
 

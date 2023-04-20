@@ -1,5 +1,10 @@
-const handler = async function (req) {
-  return await req.context.getConsultantsOrAdmins();
+const Joi = require("joi");
+
+const query_schema = Joi.object({});
+
+const handler = async function (req)
+{
+	return await req.context.getConsultantsOrAdmins();
 };
 
-module.exports = { handler, auth: true, auth_consultant: true };
+module.exports = { handler, query_schema, auth: true, auth_consultant: true };
