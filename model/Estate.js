@@ -20,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     address: { type: DataTypes.TEXT, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: true },
     land_size_meter: { type: DataTypes.FLOAT, allowNull: true },
-    buliding_size_meter: { type: DataTypes.FLOAT, allowNull: true },
+    building_size_meter: { type: DataTypes.FLOAT, allowNull: true },
     loan: { type: DataTypes.BOOLEAN, allowNull: true },
     document_type: { type: DataTypes.STRING, allowNull: true },
-    // sale
+    // sale																		// todo redesign!!!
     sale_method: {
       type: Sequelize.ENUM("rent", "pawn", "sell"),
       allowNull: true,

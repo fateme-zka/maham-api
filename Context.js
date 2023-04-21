@@ -10,93 +10,93 @@ module.exports = class Context
 
 	init()
 	{
-		// Models
-		const User = require("./model/User");
-		const UserRole = require("./model/UserRole");
-		const Estate = require("./model/Estate");
-		const EstateType = require("./model/EstateType");
-		const EstateImage = require("./model/EstateImage");
-		const EstateScore = require("./model/EstateScore");
-		const Like = require("./model/Like");
-		const Bookmark = require("./model/Bookmark");
-		const Province = require("./model/Province");
-		const City = require("./model/City");
-		const Comment = require("./model/Comment");
-		const Score = require("./model/Score");
-		const Message = require("./model/Message");
+		// // Models
+		// const User = require("./model/User");
+		// const UserRole = require("./model/UserRole");
+		// const Estate = require("./model/Estate");
+		// const EstateType = require("./model/EstateType");
+		// const EstateImage = require("./model/EstateImage");
+		// const EstateScore = require("./model/EstateScore");
+		// const Like = require("./model/Like");
+		// const Bookmark = require("./model/Bookmark");
+		// const Province = require("./model/Province");
+		// const City = require("./model/City");
+		// const Comment = require("./model/Comment");
+		// const Score = require("./model/Score");
+		// const Message = require("./model/Message");
 
-		// Tables
-		const user = User(this.database, Sequelize.DataTypes);
-		const user_role = UserRole(this.database, Sequelize.DataTypes);
-		const estate = Estate(this.database, Sequelize.DataTypes);
-		const estate_type = EstateType(this.database, Sequelize.DataTypes);
-		const estate_image = EstateImage(this.database, Sequelize.DataTypes);
-		const estate_score = EstateScore(this.database, Sequelize.DataTypes);
-		const like = Like(this.database, Sequelize.DataTypes);
-		const bookmark = Bookmark(this.database, Sequelize.DataTypes);
-		const province = Province(this.database, Sequelize.DataTypes);
-		const city = City(this.database, Sequelize.DataTypes);
-		const comment = Comment(this.database, Sequelize.DataTypes);
-		const score = Score(this.database, Sequelize.DataTypes);
-		const message = Message(this.database, Sequelize.DataTypes);
+		// // Tables
+		// const user = User(this.database, Sequelize.DataTypes);
+		// const user_role = UserRole(this.database, Sequelize.DataTypes);
+		// const estate = Estate(this.database, Sequelize.DataTypes);
+		// const estate_type = EstateType(this.database, Sequelize.DataTypes);
+		// const estate_image = EstateImage(this.database, Sequelize.DataTypes);
+		// const estate_score = EstateScore(this.database, Sequelize.DataTypes);
+		// const like = Like(this.database, Sequelize.DataTypes);
+		// const bookmark = Bookmark(this.database, Sequelize.DataTypes);
+		// const province = Province(this.database, Sequelize.DataTypes);
+		// const city = City(this.database, Sequelize.DataTypes);
+		// const comment = Comment(this.database, Sequelize.DataTypes);
+		// const score = Score(this.database, Sequelize.DataTypes);
+		// const message = Message(this.database, Sequelize.DataTypes);
 
-		// ForeignKeys
-		user.belongsTo(user_role, {
-			foreignKey: { name: "user_role_id", allowNull: false },
-		});
-		estate.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
-		estate.belongsTo(estate_type, {
-			foreignKey: { name: "estate_type_id", allowNull: false },
-		});
-		estate.belongsTo(province, {
-			foreignKey: { name: "province_id", allowNull: false },
-		});
-		estate.belongsTo(city, {
-			foreignKey: { name: "city_id", allowNull: false },
-		});
-		estate_image.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		estate_score.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		like.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
-		like.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		bookmark.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
-		bookmark.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		city.belongsTo(province, {
-			foreignKey: { name: "province_id", allowNull: false },
-		});
-		comment.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		comment.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
-		score.belongsTo(estate, {
-			foreignKey: { name: "estate_id", allowNull: false },
-		});
-		score.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
-		message.belongsTo(user, {
-			foreignKey: { name: "sender_id", allowNull: false },
-		});
-		message.belongsTo(user, {
-			foreignKey: { name: "receiver_id", allowNull: false },
-		});
+		// // ForeignKeys
+		// user.belongsTo(user_role, {
+		// 	foreignKey: { name: "user_role_id", allowNull: false },
+		// });
+		// estate.belongsTo(user, {
+		// 	foreignKey: { name: "user_id", allowNull: false },
+		// });
+		// estate.belongsTo(estate_type, {
+		// 	foreignKey: { name: "estate_type_id", allowNull: false },
+		// });
+		// estate.belongsTo(province, {
+		// 	foreignKey: { name: "province_id", allowNull: false },
+		// });
+		// estate.belongsTo(city, {
+		// 	foreignKey: { name: "city_id", allowNull: false },
+		// });
+		// estate_image.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// estate_score.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// like.belongsTo(user, {
+		// 	foreignKey: { name: "user_id", allowNull: false },
+		// });
+		// like.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// bookmark.belongsTo(user, {
+		// 	foreignKey: { name: "user_id", allowNull: false },
+		// });
+		// bookmark.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// city.belongsTo(province, {
+		// 	foreignKey: { name: "province_id", allowNull: false },
+		// });
+		// comment.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// comment.belongsTo(user, {
+		// 	foreignKey: { name: "user_id", allowNull: false },
+		// });
+		// score.belongsTo(estate, {
+		// 	foreignKey: { name: "estate_id", allowNull: false },
+		// });
+		// score.belongsTo(user, {
+		// 	foreignKey: { name: "user_id", allowNull: false },
+		// });
+		// message.belongsTo(user, {
+		// 	foreignKey: { name: "sender_id", allowNull: false },
+		// });
+		// message.belongsTo(user, {
+		// 	foreignKey: { name: "receiver_id", allowNull: false },
+		// });
 
-		this.database.sync({ force: false });
+		// this.database.sync({ force: false });
 	}
 
 	static initWhere(column, value)
