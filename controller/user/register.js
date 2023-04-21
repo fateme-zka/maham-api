@@ -2,12 +2,16 @@ const Joi = require("joi");
 const Phone = require("phone");
 const Bcrypt = require("bcrypt");
 const Jwt = require("jsonwebtoken");
+const PATTERN = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 const body_schema = Joi.object({
-	email: Joi.string().email().min(4).required(),
-	password: Joi.string().min(6).alphanum().required(),
 	name: Joi.string().required(),
 	phone_number: Joi.string().max(13).required(),
+	email: Joi.string().email().min(4).required(),
+	password: Joi.string().regex(PATTERN).required()
+		.messages({
+			"string.pattern.base": "Please select a password with a minimum of 8 characters least one upper and lower case character and at least one number and one special character."
+		}),
 	image: Joi.string().allow(null),
 	cover_image: Joi.string().allow(null),
 });
