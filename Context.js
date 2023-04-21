@@ -125,13 +125,18 @@ module.exports = class Context
 		return await this.database.models[model].findOne(options);
 	}
 
+	async createModel(model, values)
+	{
+		return await this.database.models[model].create(values);
+	}
+
 	//#region User
 	async getUser(column, value)
 	{
-		let where = {};
-		if (column == "id") where = { id: value };
-		else if (column == "email") where = { email: value };
-		else if (column == "phone_number") where = { phone_number: value };
+		let where = { column: value };
+		// if (column == "id") where = { id: value };
+		// else if (column == "email") where = { email: value };
+		// else if (column == "phone_number") where = { phone_number: value };
 		return await this.getModel("user", {
 			where,
 			include: {
@@ -159,18 +164,17 @@ module.exports = class Context
 		cover_image
 	)
 	{
-		name = name.trim();
-		email = email.trim();
-		return await this.database.models.user.create({
+		let values = {
 			user_role_id,
 			admin,
-			email,
+			email: email.trim(),
 			password,
-			name,
+			name: name.trim(),
 			phone_number,
 			image,
 			cover_image
-		});
+		}
+		return await this.createModel("user", values);
 	}
 
 	async updateUser(id, fields)
@@ -388,7 +392,7 @@ module.exports = class Context
 		images
 	)
 	{
-		let estate = await this.database.models.estate.create({
+		let values = {
 			estate_type_id,
 			user_id,
 			name,
@@ -451,10 +455,12 @@ module.exports = class Context
 			camera,
 			video_door_phone,
 			pool,
-		});
+		};
+		let estate = await this.createModel("estate", values);
+
 		images.forEach(async (image) =>
 		{
-			await this.database.models.estate_image.create({
+			await this.createModel("estate_image", {
 				estate_id: estate.id,
 				image,
 			});
@@ -486,7 +492,7 @@ module.exports = class Context
 		});
 		images.forEach(async (image) =>
 		{
-			await this.database.models.estate_image.create({
+			await this.createModel("estate_image", {
 				estate_id: id,
 				image,
 			});
@@ -543,7 +549,7 @@ module.exports = class Context
 			where: { user_id, estate_id },
 		});
 		if (!like)
-			return await this.database.models.like.create({ user_id, estate_id });
+			return await this.createModel("like", { user_id, estate_id });
 	}
 
 	async countLikes(estate_id)
@@ -575,7 +581,7 @@ module.exports = class Context
 			where: { user_id, estate_id },
 		});
 		if (!bookmark)
-			return await this.database.models.bookmark.create({ user_id, estate_id });
+			return await this.createModel("bookmark", { user_id, estate_id });
 	}
 
 	async checkBookmark(estate_id, user_id)
@@ -616,7 +622,7 @@ module.exports = class Context
 
 	async addComment(estate_id, user_id, text)
 	{
-		return await this.database.models.comment.create({
+		return await this.createModel("comment", {
 			estate_id,
 			user_id,
 			text,
@@ -631,7 +637,7 @@ module.exports = class Context
 
 	async addScore(estate_id, user_id, star)
 	{
-		return await this.database.models.score.create({
+		return await this.createModel("score", {
 			estate_id,
 			user_id,
 			star,
@@ -672,7 +678,7 @@ module.exports = class Context
 
 	async sendMessage(sender_id, receiver_id, title, text)
 	{
-		return await this.database.models.message.create({
+		return await this.createModel("message", {
 			sender_id,
 			receiver_id,
 			title,
