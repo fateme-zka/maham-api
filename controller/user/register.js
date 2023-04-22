@@ -18,7 +18,7 @@ const body_schema = Joi.object({
 const handler = async function (req)
 {
 	let { email, password, name, phone_number, image, } = req.body;
-	let user_role_id = parseInt(process.env.consumer_role_id);
+	let user_role_id = parseInt(process.env.consumer_role_position);
 
 	// check email
 	let user = await req.context.getUser("email", email);

@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
+const error_operation = require("./util/error_operation");
 
 module.exports = class Context
 {
@@ -161,10 +162,15 @@ module.exports = class Context
 		return [];
 	}
 
-	async getModel(model, options)
+	async getModel(model, options, user_id, noErrorOnEmpty)
 	{
 		if (!options) options = {};
-		return await this.database.models[model].findOne(options);
+		let value = await this.database.models[model].findOne(options);
+		if (!value && !noErrorOnEmpty)
+			error_operation.throwError(404, "Could not found " + model);
+		if (user_id && value.user_id != user_id)
+			error_operation.throwError(403, "The user is not allowed!");
+		return value;
 	}
 
 	async createModel(model, values)
