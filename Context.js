@@ -133,20 +133,12 @@ module.exports = class Context
 	//#region User
 	async getUser(column, value)
 	{
-		let where = { column: value };
 		return await this.getModel("user", {
-			where,
+			where: { column: value },
 			include: {
 				model: this.database.models.user_role,
 				as: "user_role",
 			},
-		});
-	}
-
-	async getConsultantsOrAdmins()
-	{
-		return await this.database.models.user.findAll({
-			attributes: ["id", "email", "name"],
 		});
 	}
 
@@ -171,6 +163,13 @@ module.exports = class Context
 		}
 		let user = await this.createModel("user", values);
 		return user.safe(); // todo check
+	}
+
+	async getConsultantsOrAdmins()
+	{
+		return await this.database.models.user.findAll({
+			attributes: ["id", "email", "name"],
+		});
 	}
 
 	async updateUser(id, fields)

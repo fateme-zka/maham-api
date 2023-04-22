@@ -12,22 +12,18 @@ const body_schema = Joi.object({
 		.messages({
 			"string.pattern.base": "Please select a password with a minimum of 8 characters least one upper and lower case character and at least one number and one special character."
 		}),
-	image: Joi.string().allow(null),
+	image: Joi.string().allow(""),
 });
 
 const handler = async function (req)
 {
-	let {
-		email,
-		password,
-		name,
-		phone_number,
-		image,
-	} = req.body;
-	let user_role_id = parseInt(process.env.customer_id);
+	let { email, password, name, phone_number, image, } = req.body;
+	let user_role_id = parseInt(process.env.consumer_role_id);
+
 	// check email
 	let user = await req.context.getUser("email", email);
 	if (user) req.throw(400, "Username (email) already exists.");
+
 	// check phone_number
 	if (phone_number)
 	{
@@ -36,6 +32,7 @@ const handler = async function (req)
 		user = await req.context.getUser("phone_number", phone_number);
 		if (user) req.throw(400, "Phone number already exists.");
 	}
+
 	// hash password
 	password = await Bcrypt.hash(password, process.env.bcrypt_salt);
 	user = await req.context.registerUser(
