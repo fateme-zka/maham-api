@@ -173,15 +173,23 @@ module.exports = class Context
 	}
 
 	//#region User
-	async getUser(column, value)
+	async getUser(column, value, exclude)
 	{
-		return await this.getModel("user", {
-			where: { column: value },
+		let options = {
+			where: {},
 			include: {
 				model: this.database.models.user_role,
 				as: "user_role",
 			},
-		});
+		};
+		if (column == "id") options.where.id = value;
+		if (column == "email") options.where.email = value;
+		if (exclude)
+		{
+			options.attributes = ["id", "name", "email", "phone_number"];
+			options.include.attributes = ["id", "name", "position"]
+		}
+		return await this.getModel("user", options);
 	}
 
 	async registerUser(
@@ -204,7 +212,10 @@ module.exports = class Context
 			image
 		}
 		let user = await this.createModel("user", values);
-		return user.safe(); // todo check
+		return await this.database.models.user.findOne({
+			where: { id: user.id },
+			attributes: ["id", "name", "email", "phone_number"]
+		});
 	}
 
 	async getConsultantsOrAdmins()

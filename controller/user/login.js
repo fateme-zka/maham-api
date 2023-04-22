@@ -4,7 +4,7 @@ const Jwt = require("jsonwebtoken");
 
 const body_schema = Joi.object({
 	email: Joi.string().email().required(),
-	password: Joi.string().min(6).required(),
+	password: Joi.string().required(),
 });
 
 const handler = async function (req)
@@ -21,6 +21,8 @@ const handler = async function (req)
 
 	password = await Bcrypt.hash(password, process.env.bcrypt_salt);
 	if (user.password !== password) req.throw(400, "Invalid password.");
+
+	user = await req.context.getUser("id", user.id, true);
 
 	const payload = {
 		user_id: user.id,
