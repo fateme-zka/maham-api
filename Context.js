@@ -695,4 +695,19 @@ module.exports = class Context
 		);
 	}
 	//#endregion
+
+	//#region ContactUs
+	async addContactUs(name, email, phone_number, title, text, estate_id)
+	{
+		return await this.createModel("contact_us", { name, email, phone_number, title, text, estate_id });
+	}
+
+	async getContactUses(limit, estate_id)
+	{
+		let options = {};
+		if (estate_id) options.where.estate_id = estate_id;
+		if (limit) options.where.limit = limit;
+		return await this.database.models.contact_us.findAll(options);
+	}
+	//#endregion
 };
