@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) =>
 {
 	return Base(sequelize, DataTypes, "advertising_request", {
 		id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
+		user_id: { type: DataTypes.INTEGER, allowNull: true },
 		name: { type: DataTypes.STRING, allowNull: false },
 		phone_number: { type: DataTypes.STRING(13), allowNull: false },
 		call_number: { type: DataTypes.STRING(13), allowNull: false },

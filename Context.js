@@ -10,93 +10,135 @@ module.exports = class Context
 
 	init()
 	{
-		// // Models
-		// const User = require("./model/User");
-		// const UserRole = require("./model/UserRole");
-		// const Estate = require("./model/Estate");
-		// const EstateType = require("./model/EstateType");
-		// const EstateImage = require("./model/EstateImage");
-		// const EstateScore = require("./model/EstateScore");
-		// const Like = require("./model/Like");
-		// const Bookmark = require("./model/Bookmark");
-		// const Province = require("./model/Province");
-		// const City = require("./model/City");
-		// const Comment = require("./model/Comment");
-		// const Score = require("./model/Score");
-		// const Message = require("./model/Message");
+		// Models
+		const User = require("./model/User");
+		const UserRole = require("./model/UserRole");
+		const AdvertisingRequest = require("./model/AdvertisingRequest");
+		const ContactUs = require("./model/ContactUs");
+		const Customer = require("./model/Customer");
+		const CustomerFollowup = require("./model/CustomerFollowup");
+		const CustomerStage = require("./model/CustomerStage");
+		const Estate = require("./model/Estate");
+		const EstateBookmark = require("./model/EstateBookmark");
+		const EstateFavorite = require("./model/EstateFavorite");
+		const EstateFollowup = require("./model/EstateFollowup");
+		const EstateImage = require("./model/EstateImage");
+		const EstateScore = require("./model/EstateScore");
+		const EstateType = require("./model/EstateType");
+		const Meeting = require("./model/Meeting");
+		const Message = require("./model/Message");
+		const SupportRequest = require("./model/SupportRequest");
+		const City = require("./model/City");
+		const Province = require("./model/Province");
 
-		// // Tables
-		// const user = User(this.database, Sequelize.DataTypes);
-		// const user_role = UserRole(this.database, Sequelize.DataTypes);
-		// const estate = Estate(this.database, Sequelize.DataTypes);
-		// const estate_type = EstateType(this.database, Sequelize.DataTypes);
-		// const estate_image = EstateImage(this.database, Sequelize.DataTypes);
-		// const estate_score = EstateScore(this.database, Sequelize.DataTypes);
-		// const like = Like(this.database, Sequelize.DataTypes);
-		// const bookmark = Bookmark(this.database, Sequelize.DataTypes);
-		// const province = Province(this.database, Sequelize.DataTypes);
-		// const city = City(this.database, Sequelize.DataTypes);
-		// const comment = Comment(this.database, Sequelize.DataTypes);
-		// const score = Score(this.database, Sequelize.DataTypes);
-		// const message = Message(this.database, Sequelize.DataTypes);
+		// Tables
+		const user = User(this.database, Sequelize.DataTypes);
+		const user_role = UserRole(this.database, Sequelize.DataTypes);
+		const advertising_request = AdvertisingRequest(this.database, Sequelize.DataTypes);
+		const contact_us = ContactUs(this.database, Sequelize.DataTypes);
+		const customer = Customer(this.database, Sequelize.DataTypes);
+		const customer_followup = CustomerFollowup(this.database, Sequelize.DataTypes);
+		const customer_stage = CustomerStage(this.database, Sequelize.DataTypes);
+		const estate = Estate(this.database, Sequelize.DataTypes);
+		const estate_bookmark = EstateBookmark(this.database, Sequelize.DataTypes);
+		const estate_favorite = EstateFavorite(this.database, Sequelize.DataTypes);
+		const estate_followup = EstateFollowup(this.database, Sequelize.DataTypes);
+		const estate_image = EstateImage(this.database, Sequelize.DataTypes);
+		const estate_score = EstateScore(this.database, Sequelize.DataTypes);
+		const estate_type = EstateType(this.database, Sequelize.DataTypes);
+		const meeting = Meeting(this.database, Sequelize.DataTypes);
+		const message = Message(this.database, Sequelize.DataTypes);
+		const support_request = SupportRequest(this.database, Sequelize.DataTypes);
+		const city = City(this.database, Sequelize.DataTypes);
+		const province = Province(this.database, Sequelize.DataTypes);
 
-		// // ForeignKeys
-		// user.belongsTo(user_role, {
-		// 	foreignKey: { name: "user_role_id", allowNull: false },
-		// });
-		// estate.belongsTo(user, {
-		// 	foreignKey: { name: "user_id", allowNull: false },
-		// });
-		// estate.belongsTo(estate_type, {
-		// 	foreignKey: { name: "estate_type_id", allowNull: false },
-		// });
-		// estate.belongsTo(province, {
-		// 	foreignKey: { name: "province_id", allowNull: false },
-		// });
-		// estate.belongsTo(city, {
-		// 	foreignKey: { name: "city_id", allowNull: false },
-		// });
-		// estate_image.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// estate_score.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// like.belongsTo(user, {
-		// 	foreignKey: { name: "user_id", allowNull: false },
-		// });
-		// like.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// bookmark.belongsTo(user, {
-		// 	foreignKey: { name: "user_id", allowNull: false },
-		// });
-		// bookmark.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// city.belongsTo(province, {
-		// 	foreignKey: { name: "province_id", allowNull: false },
-		// });
-		// comment.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// comment.belongsTo(user, {
-		// 	foreignKey: { name: "user_id", allowNull: false },
-		// });
-		// score.belongsTo(estate, {
-		// 	foreignKey: { name: "estate_id", allowNull: false },
-		// });
-		// score.belongsTo(user, {
-		// 	foreignKey: { name: "user_id", allowNull: false },
-		// });
-		// message.belongsTo(user, {
-		// 	foreignKey: { name: "sender_id", allowNull: false },
-		// });
-		// message.belongsTo(user, {
-		// 	foreignKey: { name: "receiver_id", allowNull: false },
-		// });
+		// ForeignKeys
+		user.belongsTo(user_role, {
+			foreignKey: { name: "user_role_id", allowNull: false },
+		});
+		advertising_request.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: true },
+		});
+		contact_us.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: true },
+		});
+		customer.belongsTo(customer_stage, {
+			foreignKey: { name: "customer_stage_id", allowNull: false },
+		});
+		customer_followup.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		customer_followup.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
+		customer_followup.belongsTo(customer_stage, {
+			foreignKey: { name: "customer_stage_id", allowNull: false },
+		});
+		customer_followup.belongsTo(user, {
+			foreignKey: { name: "followup_user_id", allowNull: false },
+		});
+		estate.belongsTo(estate_type, {
+			foreignKey: { name: "estate_type_id", allowNull: false },
+		});
+		estate.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		estate.belongsTo(province, {
+			foreignKey: { name: "province_id", allowNull: false },
+		});
+		estate.belongsTo(city, {
+			foreignKey: { name: "city_id", allowNull: false },
+		});
+		estate_bookmark.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_bookmark.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		estate_favorite.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_favorite.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		estate_followup.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_followup.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		estate_followup.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
+		estate_image.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_score.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_score.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		meeting.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		meeting.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
+		message.belongsTo(user, {
+			foreignKey: { name: "sender_id", allowNull: false },
+		});
+		message.belongsTo(user, {
+			foreignKey: { name: "receiver_id", allowNull: false },
+		});
+		support_request.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: true },
+		});
+		city.belongsTo(province, {
+			foreignKey: { name: "province_id", allowNull: false },
+		});
 
-		// this.database.sync({ force: false });
+		this.database.sync({ force: false });
 	}
 
 	static initWhere(column, value)
