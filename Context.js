@@ -134,9 +134,6 @@ module.exports = class Context
 	async getUser(column, value)
 	{
 		let where = { column: value };
-		// if (column == "id") where = { id: value };
-		// else if (column == "email") where = { email: value };
-		// else if (column == "phone_number") where = { phone_number: value };
 		return await this.getModel("user", {
 			where,
 			include: {
@@ -160,8 +157,7 @@ module.exports = class Context
 		password,
 		name,
 		phone_number,
-		image,
-		cover_image
+		image
 	)
 	{
 		let values = {
@@ -171,10 +167,10 @@ module.exports = class Context
 			password,
 			name: name.trim(),
 			phone_number,
-			image,
-			cover_image
+			image
 		}
-		return await this.createModel("user", values);
+		let user = await this.createModel("user", values);
+		return user.safe(); // todo check
 	}
 
 	async updateUser(id, fields)

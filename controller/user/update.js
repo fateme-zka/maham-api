@@ -6,7 +6,6 @@ const body_schema = Joi.object({
 	name: Joi.string().allow(""),
 	phone_number: Joi.string().allow(""),
 	image: Joi.string().allow(""),
-	cover_image: Joi.string().allow(""),
 });
 
 const handler = async function (req)
@@ -19,7 +18,6 @@ const handler = async function (req)
 		name,
 		phone_number,
 		image,
-		cover_image,
 	} = req.body;
 	// check username
 	if (email)   // todo check ???
@@ -42,7 +40,6 @@ const handler = async function (req)
 		name,
 		phone_number,
 		image,
-		cover_image,
 	});
 };
 

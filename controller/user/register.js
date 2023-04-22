@@ -13,7 +13,6 @@ const body_schema = Joi.object({
 			"string.pattern.base": "Please select a password with a minimum of 8 characters least one upper and lower case character and at least one number and one special character."
 		}),
 	image: Joi.string().allow(null),
-	cover_image: Joi.string().allow(null),
 });
 
 const handler = async function (req)
@@ -24,7 +23,6 @@ const handler = async function (req)
 		name,
 		phone_number,
 		image,
-		cover_image,
 	} = req.body;
 	let user_role_id = parseInt(process.env.customer_id);
 	// check email
@@ -48,7 +46,6 @@ const handler = async function (req)
 		name,
 		phone_number,
 		image,
-		cover_image
 	);
 	const payload = {
 		user_id: user.id,

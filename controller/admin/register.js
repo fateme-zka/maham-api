@@ -12,7 +12,6 @@ const body_schema = Joi.object({
 	phone_number: Joi.string().max(13).required(),
 	email: Joi.string().email().allow(null),
 	image: Joi.string().allow(null),
-	cover_image: Joi.string().allow(null),
 });
 
 const handler = async function (req)
@@ -26,7 +25,6 @@ const handler = async function (req)
 		phone_number,
 		email,
 		image,
-		cover_image,
 	} = req.body;
 	// check username
 	let user = await req.context.getUser("username", username);
@@ -53,7 +51,6 @@ const handler = async function (req)
 		phone_number,
 		email,
 		image,
-		cover_image
 	);
 	return { user };
 };
