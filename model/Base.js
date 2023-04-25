@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes, name, model, config) =>
 	if (config.tableName == undefined) config.tableName = name;
 	if (config.underscored == undefined) config.underscored = true;
 	config.timestamps = true;
-	//   config.paranoid = false;
+	config.paranoid = true;
 	config.createdAt = true;
 	config.updatedAt = true;
 	return sequelize.define(name, model, config);
