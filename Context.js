@@ -29,6 +29,7 @@ module.exports = class Context
 		const Meeting = require("./model/Meeting");
 		const Message = require("./model/Message");
 		const Setting = require("./model/Setting");
+		const Sms = require("./model/Sms");
 		const SupportRequest = require("./model/SupportRequest");
 		const City = require("./model/City");
 		const Province = require("./model/Province");
@@ -51,6 +52,7 @@ module.exports = class Context
 		const meeting = Meeting(this.database, Sequelize.DataTypes);
 		const message = Message(this.database, Sequelize.DataTypes);
 		const setting = Setting(this.database, Sequelize.DataTypes);
+		const sms = Sms(this.database, Sequelize.DataTypes);
 		const support_request = SupportRequest(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
@@ -135,6 +137,9 @@ module.exports = class Context
 			foreignKey: { name: "receiver_id", allowNull: false },
 		});
 		setting.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: true },
+		});
+		sms.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
 		});
 		support_request.belongsTo(user, {
