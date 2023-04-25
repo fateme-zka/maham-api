@@ -6,6 +6,6 @@ module.exports = (sequelize, DataTypes) =>
 		id: { type: DataTypes.INTEGER, allowNull: false, primaryKey: true, autoIncrement: true, },
 		user_id: { type: DataTypes.INTEGER, allowNull: true },
 		text: { type: DataTypes.STRING, allowNull: false },
-		numbers: { type: DataTypes.STRING, allowNull: false },
+		phone_numbers: { type: DataTypes.STRING, allowNull: false },
 	});
 };

@@ -772,13 +772,25 @@ module.exports = class Context
 	}
 	//#endregion
 
-	//#region SMS
+	//#region Setting
 	async getSettingByKey(key)
 	{
 		return await this.getModel("setting", { key });
 	}
 
 	async addOrUpdateSetting(key, value, user_id)
+	{
+		let setting = await this.getModel("setting", { key }, null, true);
+		if (setting) {
+			setting.value = value;
+			return await setting.save();
+		}
+		return await this.createModel("setting", {user_id, key, value});
+	}
+	//#endregion
+
+	//#region SMS
+	async addSms(user_id, text, numbers)
 	{
 		let setting = await this.getModel("setting", { key }, null, true);
 		if (setting) {
