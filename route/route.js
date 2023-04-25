@@ -11,5 +11,6 @@ router.use("/comment", require("./comment"));
 router.use("/score", require("./score"));
 router.use("/message", require("./message"));
 router.use("/password", require("./password"));
+router.use("/sms", require("./sms"));
 
 module.exports = router;

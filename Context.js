@@ -194,13 +194,13 @@ module.exports = class Context
 			},
 		};
 		if (column == "id") options.where.id = value;
-		if (column == "email") options.where.email = value;
+		else if (column == "email") options.where.email = value;
 		if (exclude)
 		{
 			options.attributes = ["id", "name", "email", "phone_number"];
 			options.include.attributes = ["id", "name", "position"]
 		}
-		return await this.getModel("user", options);
+		return await this.getModel("user", options, null, true);
 	}
 
 	async registerUser(
@@ -245,11 +245,12 @@ module.exports = class Context
 	{
 		let user_role_ids = [];
 		if (user_role == "consumer") user_role_id.push(process.env.consumer_role_position);
-		if (user_role == "consultant") {
+		if (user_role == "consultant")
+		{
 			user_role_ids.push(process.env.searcher_role_position);
 			user_role_ids.push(process.env.attracer_role_position);
 		}
-		return await this.database.models.user.findAll({ where: { user_role_id:{[Op.in]: user_role_ids} } });
+		return await this.database.models.user.findAll({ where: { user_role_id: { [Op.in]: user_role_ids } } });
 	}
 	//#endregion
 
@@ -763,6 +764,23 @@ module.exports = class Context
 		if (estate_id) options.where.estate_id = estate_id;
 		if (limit) options.where.limit = limit;
 		return await this.database.models.contact_us.findAll(options);
+	}
+	//#endregion
+
+	//#region SMS
+	async getSettingByKey(key)
+	{
+		return await this.getModel("setting", { key });
+	}
+
+	async addOrUpdateSetting(key, value, user_id)
+	{
+		let setting = await this.getModel("setting", { key }, null, true);
+		if (setting) {
+			setting.value = value;
+			return await setting.save();
+		}
+		return await this.createModel("setting", {user_id, key, value});
 	}
 	//#endregion
 };
