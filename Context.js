@@ -28,6 +28,7 @@ module.exports = class Context
 		const EstateType = require("./model/EstateType");
 		const Meeting = require("./model/Meeting");
 		const Message = require("./model/Message");
+		const Setting = require("./model/Setting");
 		const SupportRequest = require("./model/SupportRequest");
 		const City = require("./model/City");
 		const Province = require("./model/Province");
@@ -49,6 +50,7 @@ module.exports = class Context
 		const estate_type = EstateType(this.database, Sequelize.DataTypes);
 		const meeting = Meeting(this.database, Sequelize.DataTypes);
 		const message = Message(this.database, Sequelize.DataTypes);
+		const setting = Setting(this.database, Sequelize.DataTypes);
 		const support_request = SupportRequest(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
@@ -131,6 +133,9 @@ module.exports = class Context
 		});
 		message.belongsTo(user, {
 			foreignKey: { name: "receiver_id", allowNull: false },
+		});
+		setting.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: true },
 		});
 		support_request.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
@@ -224,13 +229,6 @@ module.exports = class Context
 		});
 	}
 
-	async getConsultantsOrAdmins()
-	{
-		return await this.database.models.user.findAll({
-			attributes: ["id", "email", "name"],
-		});
-	}
-
 	async updateUser(id, fields)
 	{
 		let values = {};
@@ -242,13 +240,16 @@ module.exports = class Context
 	}
 	//#endregion
 
-	//#region UserRole
-	async getUserRole(id, name)
+	//#region Admin
+	async getUsers(user_role)
 	{
-		let where = {};
-		if (id) where.id = id;
-		if (name) where.name = { [Sequelize.Op.like]: "%" + name.trim() + "%" };
-		return await this.database.models.user_role.findOne({ where });
+		let user_role_ids = [];
+		if (user_role == "consumer") user_role_id.push(process.env.consumer_role_position);
+		if (user_role == "consultant") {
+			user_role_ids.push(process.env.searcher_role_position);
+			user_role_ids.push(process.env.attracer_role_position);
+		}
+		return await this.database.models.user.findAll({ where: { user_role_id:{[Op.in]: user_role_ids} } });
 	}
 	//#endregion
 
