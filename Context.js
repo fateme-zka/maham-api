@@ -806,11 +806,11 @@ module.exports = class Context
 	}
 	//#endregion
 
-
 	//#region Customer
 	async addCustomer(user_id, customer_stage_id, name, phone_number, address)
 	{
-		return await this.database.models.customer.create({ user_id, customer_stage_id, name, phone_number, address });
+		let values = { user_id, customer_stage_id, name, phone_number, address };
+		return await this.createModel("customer", values);
 	}
 
 	async getCustomers(user_id)
@@ -857,12 +857,12 @@ module.exports = class Context
 
 	async addCustomerStage(name)
 	{
-		return await this.database.models.customer_stage.create({ name });
+		return await this.createModel("customer_stage", { name });
 	}
 
 	async addCustomerFollowup(user_id, customer_id, customer_stage_id, followup_user_id, time, date, reminder_time, reminder_date, description)
 	{
-		return await this.database.models.customer_followup.create({
+		let values = {
 			user_id,
 			customer_id,
 			customer_stage_id,
@@ -872,7 +872,22 @@ module.exports = class Context
 			reminder_time,
 			reminder_date,
 			description
-		});
+		};
+		return await this.createModel("customer_followup", values);
 	}
 	//#endregion
+
+	//#region Advertising Request
+	async getAdvertisingRequests()
+	{
+		return await this.database.models.advertising_request.findAll();
+	}
+
+	async addAdvertisingRequests(user_id, name, phone_number, call_number, type, description)
+	{
+		let values = { user_id, name, phone_number, call_number, type, description };
+		return await this.createModel("advertising_request", values);
+	}
+	//#endregion
+
 };
