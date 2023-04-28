@@ -821,6 +821,28 @@ module.exports = class Context
 		return await this.database.models.customer.findAll();
 	}
 
+	async updateCustomer(id, customer_stage_id, name, phone_number, address)
+	{
+		let customer = await this.getModel("customer", { where: { id } }, null);
+		if (customer_stage_id)
+			customer.customer_stage_id = customer_stage_id;
+		if (name)
+			customer.name = name;
+		if (phone_number)
+			customer.phone_number = phone_number;
+		if (address)
+			customer.address = address;
+
+		return await customer.save();
+	}
+
+	async deleteCustomer(id)
+	{
+		let customer = await this.getModel("customer", { where: { id } }, null);
+		await this.database.models.customer.destroy({ where: { id } });
+		return customer;
+	}
+
 	async getCustomerStages()
 	{
 		return await this.database.models.customer_stage.findAll({
@@ -830,7 +852,7 @@ module.exports = class Context
 
 	async getCustomerStage(name)
 	{
-		return await this.database.models.customer_stage.findOne({ where: { name } });
+		return await this.getModel("customer_stage", { where: { name } }, null, true);
 	}
 
 	async addCustomerStage(name)
