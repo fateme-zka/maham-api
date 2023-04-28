@@ -24,4 +24,16 @@ router.put("/update/:id", requestHandler(updateController));
 router.put("/transfer/:id", requestHandler(transferController));
 router.delete("/delete/:id", requestHandler(deleteController));
 
+
+// new
+const getAllFollowupsController = require("../controller/estate/getAllEstateFollowup");
+const postFollowupsController = require("../controller/estate/postEstateFollowup");
+const putFollowupController = require("../controller/estate/putEstateFollowup");
+const deleteFollowupController = require("../controller/estate/deleteEstateFollowup");
+
+router.get("/followup/all", requestHandler(getAllFollowupsController));
+router.post("/followup", requestHandler(postFollowupsController));
+router.put("/followup/:id", requestHandler(putFollowupController));
+router.delete("/followup/:id", requestHandler(deleteFollowupController));
+
 module.exports = router;

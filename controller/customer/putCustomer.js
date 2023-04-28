@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 const body_schema = Joi.object({
+	user_id: Joi.number().allow(""),
 	customer_stage_id: Joi.number().allow(""),
 	name: Joi.string().allow(""),
 	phone_number: Joi.string().max(13).allow(""),
@@ -10,7 +11,7 @@ const body_schema = Joi.object({
 const handler = async function (req)
 {
 	let { id } = req.params;
-	let { customer_stage_id, name, phone_number, address } = req.body;
+	let { user_id, customer_stage_id, name, phone_number, address } = req.body;
 
 	// check phone_number
 	if (phone_number)
@@ -19,7 +20,7 @@ const handler = async function (req)
 			req.throw(400, "Invalid phone number.");
 	}
 
-	return await req.context.updateCustomer(id, customer_stage_id, name, phone_number, address);
+	return await req.context.updateCustomer(id, user_id, customer_stage_id, name, phone_number, address);
 };
 
 module.exports = { handler, body_schema, auth: true, auth_consultant: true };

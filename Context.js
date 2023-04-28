@@ -594,9 +594,7 @@ module.exports = class Context
 			{ where: { id } }
 		);
 	}
-	//#endregion
 
-	//#region Estate Type
 	async getEstateType(name)
 	{
 		return await this.database.models.estate_type.findOne({
@@ -606,6 +604,44 @@ module.exports = class Context
 				},
 			},
 		});
+	}
+
+	async getEstateFollowups(user_id)
+	{
+		let user = await this.getUser("id", user_id);
+		if (!user.admin)
+			return await this.database.models.estate_followup.findAll({ where: { user_id } });
+		return await this.database.models.estate_followup.findAll();
+	}
+
+	async addEstateFollowup(user_id, estate_id, customer_id, register_time, register_date, reminder_time, reminder_date, description)
+	{
+		let values = { user_id, estate_id, customer_id, register_time, register_date, reminder_time, reminder_date, description };
+		return await this.createModel("estate_followup", values);
+	}
+
+	async updateEstateFollowup(id, user_id, register_time, register_date, reminder_time, reminder_date, description)
+	{
+		let estate_followup = await this.getModel("estate_followup", { where: { id } });
+		if (user_id)
+			estate_followup.user_id = user_id;
+		if (register_time)
+			estate_followup.register_time = register_time;
+		if (register_date)
+			estate_followup.register_date = register_date;
+		if (reminder_time)
+			estate_followup.reminder_time = reminder_time;
+		if (reminder_date)
+			estate_followup.reminder_date = reminder_date;
+		if (description)
+			estate_followup.description = description;
+
+		return await estate_followup.save();
+	}
+
+	async deleteEstateFollowup(id)
+	{
+		return await this.deleteModel("estate_followup", { where: { id } });
 	}
 	//#endregion
 
@@ -831,9 +867,11 @@ module.exports = class Context
 		return await this.database.models.customer.findAll();
 	}
 
-	async updateCustomer(id, customer_stage_id, name, phone_number, address)
+	async updateCustomer(id, user_id, customer_stage_id, name, phone_number, address)
 	{
-		let customer = await this.getModel("customer", { where: { id } }, null);
+		let customer = await this.getModel("customer", { where: { id } });
+		if (user_id)
+			customer.user_id = user_id;
 		if (customer_stage_id)
 			customer.customer_stage_id = customer_stage_id;
 		if (name)
