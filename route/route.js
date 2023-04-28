@@ -14,5 +14,6 @@ router.use("/password", require("./password"));
 router.use("/sms", require("./sms"));
 router.use("/customer", require("./customer"));
 router.use("/advertising", require("./advertising"));
+router.use("/meeting", require("./meeting"));
 
 module.exports = router;

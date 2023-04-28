@@ -127,6 +127,9 @@ module.exports = class Context
 		estate_score.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		meeting.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
 		meeting.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
@@ -189,6 +192,13 @@ module.exports = class Context
 	async createModel(model, values)
 	{
 		return await this.database.models[model].create(values);
+	}
+
+	async deleteModel(model, options)
+	{
+		let value = await this.getModel(model, options);
+		await value.destroy();
+		return value;
 	}
 
 	//#region User
@@ -890,4 +900,43 @@ module.exports = class Context
 	}
 	//#endregion
 
+	//#region Meeting
+	async getMeetings(user_id)
+	{
+		let user = await this.getUser("id", user_id);
+		if (!user.admin)
+			return await this.database.models.meeting.findAll({ where: { user_id } });
+		return await this.database.models.meeting.findAll();
+	}
+
+	async addMeeting(user_id, estate_id, customer_id, title, description, address, time, date, send_sms)
+	{
+		let values = { user_id, estate_id, customer_id, title, description, address, time, date, send_sms }
+		return await this.createModel("meeting", values);
+	}
+
+	async deleteMeeting(id)
+	{
+		return await this.deleteModel("meeting", { where: { id } });
+	}
+
+	async updateMeeting(id, title, description, address, time, date, send_sms)
+	{
+		let meeting = await this.getModel("meeting", { where: { id } });
+		if (title)
+			meeting.title = title;
+		if (description)
+			meeting.description = description;
+		if (address)
+			meeting.address = address;
+		if (time)
+			meeting.time = time;
+		if (date)
+			meeting.date = date;
+		if (send_sms == true || send_sms == false)
+			meeting.send_sms = send_sms;
+
+		return await meeting.save();
+	}
+	//#endregion
 };
