@@ -781,11 +781,12 @@ module.exports = class Context
 	async addOrUpdateSetting(key, value, user_id)
 	{
 		let setting = await this.getModel("setting", { key }, null, true);
-		if (setting) {
+		if (setting)
+		{
 			setting.value = value;
 			return await setting.save();
 		}
-		return await this.createModel("setting", {user_id, key, value});
+		return await this.createModel("setting", { user_id, key, value });
 	}
 	//#endregion
 
@@ -793,11 +794,32 @@ module.exports = class Context
 	async addSms(user_id, text, numbers)
 	{
 		let setting = await this.getModel("setting", { key }, null, true);
-		if (setting) {
+		if (setting)
+		{
 			setting.value = value;
 			return await setting.save();
 		}
-		return await this.createModel("setting", {user_id, key, value});
+		return await this.createModel("setting", { user_id, key, value });
+	}
+	//#endregion
+
+
+	//#region Customer
+	async getCustomerStages()
+	{
+		return await this.database.models.customer_stage.findAll({
+			attributes: ["id", "name"]
+		});
+	}
+
+	async getCustomerStage(name)
+	{
+		return await this.database.models.customer_stage.findOne({ where: { name } });
+	}
+
+	async addCustomerStage(name)
+	{
+		return await this.database.models.customer_stage.create({ name });
 	}
 	//#endregion
 };
