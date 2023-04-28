@@ -67,6 +67,9 @@ module.exports = class Context
 		contact_us.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: true },
 		});
+		customer.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
 		customer.belongsTo(customer_stage, {
 			foreignKey: { name: "customer_stage_id", allowNull: false },
 		});
@@ -805,6 +808,11 @@ module.exports = class Context
 
 
 	//#region Customer
+	async addCustomer(user_id, customer_stage_id, name, phone_number, address)
+	{
+		return await this.database.models.customer_stage.create({ user_id, customer_stage_id, name, phone_number, address });
+	}
+
 	async getCustomerStages()
 	{
 		return await this.database.models.customer_stage.findAll({
