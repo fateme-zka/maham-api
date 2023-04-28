@@ -813,6 +813,14 @@ module.exports = class Context
 		return await this.database.models.customer.create({ user_id, customer_stage_id, name, phone_number, address });
 	}
 
+	async getCustomers(user_id)
+	{
+		let user = await this.getUser("id", user_id);
+		if (!user.admin)
+			return await this.database.models.customer.findAll({ where: { user_id } });
+		return await this.database.models.customer.findAll();
+	}
+
 	async getCustomerStages()
 	{
 		return await this.database.models.customer_stage.findAll({
