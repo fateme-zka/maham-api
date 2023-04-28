@@ -3,8 +3,8 @@ const Phone = require("phone");
 
 const body_schema = Joi.object({
 	name: Joi.string().required(),
-	phone_number: Joi.string().required(),
-	call_number: Joi.string().required(),
+	phone_number: Joi.string().max(13).required(),
+	call_number: Joi.string().max(13).required(),
 	type: Joi.string().required(),
 	description: Joi.string().required(),
 });

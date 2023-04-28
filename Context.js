@@ -925,7 +925,7 @@ module.exports = class Context
 	}
 	//#endregion
 
-	//#region Advertising Request
+	//#region Request
 	async getAdvertisingRequests()
 	{
 		return await this.database.models.advertising_request.findAll();
@@ -935,6 +935,15 @@ module.exports = class Context
 	{
 		let values = { user_id, name, phone_number, call_number, type, description };
 		return await this.createModel("advertising_request", values);
+	}
+
+	async getSupportRequests(){
+		return await this.database.models.support_request.findAll();
+	}
+
+	async addSupportRequests(user_id, name, phone_number, call_number, title, description){
+		let values = { user_id, name, phone_number, call_number, title, description };
+		return await this.createModel("support_request", values);
 	}
 	//#endregion
 
