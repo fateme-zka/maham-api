@@ -3,9 +3,11 @@ const router = require("express").Router();
 const requestHandler = require("../middleware/requestHandler");
 
 const verifyController = require("../controller/admin/verifyEstate");
-const registerController = require("../controller/admin/register");
+const getAllUsersController = require("../controller/admin/getAllUsers");
+const postUserController = require("../controller/admin/postUser");
 
 router.get("/estate/verify/:id", requestHandler(verifyController));
-router.post("/user/register", requestHandler(registerController));
+router.get("/user/all", requestHandler(getAllUsersController));
+router.post("/user", requestHandler(postUserController));
 
 module.exports = router;

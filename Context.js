@@ -261,14 +261,13 @@ module.exports = class Context
 	//#region Admin
 	async getUsers(user_role)
 	{
-		let user_role_ids = [];
-		if (user_role == "consumer") user_role_id.push(process.env.consumer_role_position);
-		if (user_role == "consultant")
-		{
-			user_role_ids.push(process.env.searcher_role_position);
-			user_role_ids.push(process.env.attracer_role_position);
-		}
-		return await this.database.models.user.findAll({ where: { user_role_id: { [Op.in]: user_role_ids } } });
+		return await this.database.models.user.findAll({
+			include: {
+				model: this.database.models.user_role,
+				as: "user_role",
+				where: { name: { [Op.like]: '%' + user_role.trim() + '%' } }
+			},
+		})
 	}
 	//#endregion
 
@@ -937,11 +936,13 @@ module.exports = class Context
 		return await this.createModel("advertising_request", values);
 	}
 
-	async getSupportRequests(){
+	async getSupportRequests()
+	{
 		return await this.database.models.support_request.findAll();
 	}
 
-	async addSupportRequests(user_id, name, phone_number, call_number, title, description){
+	async addSupportRequests(user_id, name, phone_number, call_number, title, description)
+	{
 		let values = { user_id, name, phone_number, call_number, title, description };
 		return await this.createModel("support_request", values);
 	}
