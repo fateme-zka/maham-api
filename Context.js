@@ -859,5 +859,20 @@ module.exports = class Context
 	{
 		return await this.database.models.customer_stage.create({ name });
 	}
+
+	async addCustomerFollowup(user_id, customer_id, customer_stage_id, followup_user_id, time, date, reminder_time, reminder_date, description)
+	{
+		return await this.database.models.customer_followup.create({
+			user_id,
+			customer_id,
+			customer_stage_id,
+			followup_user_id,
+			time,
+			date,
+			reminder_time,
+			reminder_date,
+			description
+		});
+	}
 	//#endregion
 };
