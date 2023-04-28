@@ -810,7 +810,7 @@ module.exports = class Context
 	//#region Customer
 	async addCustomer(user_id, customer_stage_id, name, phone_number, address)
 	{
-		return await this.database.models.customer_stage.create({ user_id, customer_stage_id, name, phone_number, address });
+		return await this.database.models.customer.create({ user_id, customer_stage_id, name, phone_number, address });
 	}
 
 	async getCustomerStages()
