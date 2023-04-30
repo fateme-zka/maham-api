@@ -213,6 +213,7 @@ module.exports = class Context
 		};
 		if (column == "id") options.where.id = value;
 		else if (column == "email") options.where.email = value;
+		else if (column == "phone_number") options.where.phone_number = value;
 		if (exclude)
 		{
 			options.attributes = ["id", "name", "email", "phone_number"];
@@ -259,15 +260,20 @@ module.exports = class Context
 	//#endregion
 
 	//#region Admin
-	async getUsers(user_role)
+	async getUsers(user_role_name)
 	{
 		return await this.database.models.user.findAll({
 			include: {
 				model: this.database.models.user_role,
 				as: "user_role",
-				where: { name: { [Op.like]: '%' + user_role.trim() + '%' } }
+				where: { name: { [Op.like]: '%' + user_role_name.trim() + '%' } }
 			},
 		})
+	}
+
+	async getUserRole(name)
+	{
+		return await this.getModel("user_role", { where: { name: { [Op.like]: '%' + name.trim() + '%' } } });
 	}
 	//#endregion
 
