@@ -465,6 +465,11 @@ module.exports = class Context
 		return await this.database.models.estate.update({ active }, { where: { id } });
 	}
 
+	async soldEstate(id, sold)
+	{
+		return await this.database.models.estate.update({ sold }, { where: { id } });
+	}
+
 	async transferEstate(id, receiver_id)
 	{
 		return await this.database.models.estate.update(

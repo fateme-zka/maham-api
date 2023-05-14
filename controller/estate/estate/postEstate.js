@@ -146,10 +146,6 @@ const handler = async function (req)
 	// check admin
 	if (req.user.admin) verified = true;
 
-	// check consultant or consumer
-	else
-		verified = false;
-
 	let values = {
 		estate_type_id,
 		user_id,
