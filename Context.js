@@ -460,12 +460,9 @@ module.exports = class Context
 		await this.database.models.estate.destroy({ where: { id } });
 	}
 
-	async switchStatusEstate(id, active, sold)
+	async activeEstate(id, active)
 	{
-		let options = {};
-		if (active) options.active = active == "true";
-		if (sold) options.sold = sold == "true";
-		return await this.database.models.estate.update(options, { where: { id } });
+		return await this.database.models.estate.update({ active }, { where: { id } });
 	}
 
 	async transferEstate(id, receiver_id)
