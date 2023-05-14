@@ -314,7 +314,7 @@ module.exports = class Context
 		if (meter)
 		{
 			let or = {
-				[Op.or]: [{ land_size_meter: meter }, { buliding_size_meter: meter }],
+				[Op.or]: [{ land_size_meter: meter }, { building_size_meter: meter }],
 			};
 			where = { ...where, ...or };
 		}
@@ -405,145 +405,21 @@ module.exports = class Context
 		return estate;
 	}
 
-	async addEstate(
-		estate_type_id,
-		user_id,
-		name,
-		phone_number,
-		email,
-		province_id,
-		city_id,
-		area,
-		address,
-		description,
-		land_size_meter,
-		buliding_size_meter,
-		loan,
-		document_type,
-		sale_method,
-		total_price,
-		meter_price,
-		pawn_price,
-		rent_price,
-		verified,
-		sold,
-		active,
-		building_name,
-		cooling_system,
-		heating_system,
-		crossing_width,
-		length,
-		width,
-		distance_to_city,
-		distance_to_sea,
-		room_count,
-		building_floor_count,
-		building_unit_count,
-		flooring_type,
-		cabinet_type,
-		windows_type,
-		closet_type,
-		inner_door_type,
-		entrance_door_type,
-		facade_type,
-		parking,
-		storeroom,
-		elevator,
-		waterfront,
-		gazebo,
-		green_space,
-		security_door,
-		table_gas,
-		kitchen_hood,
-		furnished,
-		shooting,
-		barbecue,
-		fireplace,
-		automatic_door,
-		central_antenna,
-		terrace,
-		sauna,
-		jacuzzi,
-		air_conditioner,
-		camera,
-		video_door_phone,
-		pool,
-		images
-	)
+	async addEstate(values, images)
 	{
-		let values = {
-			estate_type_id,
-			user_id,
-			name,
-			phone_number,
-			email,
-			province_id,
-			city_id,
-			area,
-			address,
-			description,
-			land_size_meter,
-			buliding_size_meter,
-			loan,
-			document_type,
-			sale_method,
-			total_price,
-			meter_price,
-			pawn_price,
-			rent_price,
-			verified,
-			sold,
-			active,
-			building_name,
-			cooling_system,
-			heating_system,
-			crossing_width,
-			length,
-			width,
-			distance_to_city,
-			distance_to_sea,
-			room_count,
-			building_floor_count,
-			building_unit_count,
-			flooring_type,
-			cabinet_type,
-			windows_type,
-			closet_type,
-			inner_door_type,
-			entrance_door_type,
-			facade_type,
-			parking,
-			storeroom,
-			elevator,
-			waterfront,
-			gazebo,
-			green_space,
-			security_door,
-			table_gas,
-			kitchen_hood,
-			furnished,
-			shooting,
-			barbecue,
-			fireplace,
-			automatic_door,
-			central_antenna,
-			terrace,
-			sauna,
-			jacuzzi,
-			air_conditioner,
-			camera,
-			video_door_phone,
-			pool,
-		};
 		let estate = await this.createModel("estate", values);
 
-		images.forEach(async (image) =>
+		if (images)
 		{
-			await this.createModel("estate_image", {
-				estate_id: estate.id,
-				image,
-			});
-		});
+			for (let i = 0;i < images.length;i++)
+			{
+				await this.createModel("estate_image", {
+					estate_id: estate.id,
+					image: images[i],
+				});
+
+			}
+		}
 		return estate;
 	}
 

@@ -57,6 +57,7 @@ module.exports = (controller) => async (req, res) =>
 			try
 			{
 				req.user = await token_parser(req, process.env.jwt_key);
+				req.user.position = req.user.user_role.position;
 			} catch (error)
 			{
 				if (!controller.auth_optional)
