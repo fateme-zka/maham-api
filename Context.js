@@ -380,15 +380,24 @@ module.exports = class Context
 		return this.database.models.estate_type.findAll();
 	}
 
-	async getEstate(id)
+	setEstateOptions()
 	{
-		let estate = await this.getModel("estate", {
-			where: { id },
+		let options = {
+			where: {
+				verified: true,
+				sold: false,
+				active: true,
+			},
 			include: [
 				{
 					model: this.database.models.user,
 					as: "user",
 					attributes: ["name", "email", "phone_number"]
+				},
+				{
+					model: this.database.models.estate_type,
+					as: "estate_type",
+					attributes: ["name"]
 				},
 				{
 					model: this.database.models.province,
@@ -401,7 +410,14 @@ module.exports = class Context
 					attributes: ["name"]
 				},
 			],
-		});
+		};
+		return options;
+	}
+	async getEstate(id)
+	{
+		let options = this.setEstateOptions();
+		options.where.id = id;
+		let estate = await this.getModel("estate", options);
 		if (estate)
 		{
 			let images = await this.database.models.estate_image.findAll({
@@ -410,6 +426,13 @@ module.exports = class Context
 			estate.dataValues.images = images;
 		}
 		return estate;
+	}
+
+	async getRecentEstates(limit)
+	{
+		let options = this.setEstateOptions();
+		options.limit = limit;
+		return await this.database.models.estate.findAll(options);
 	}
 
 	async addEstate(values, images)

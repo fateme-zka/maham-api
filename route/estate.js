@@ -4,6 +4,7 @@ const requestHandler = require("../middleware/requestHandler");
 
 // estate
 const getEstateController = require("../controller/estate/estate/getEstate");
+const getRecentEstateController = require("../controller/estate/estate/getRecents");
 const getAllTypesController = require("../controller/estate/estate/getAllTypes");
 const postEstateController = require("../controller/estate/estate/postEstate");
 const activeEstateController = require("../controller/estate/estate/activeEstate");
@@ -16,6 +17,7 @@ const postFollowupController = require("../controller/estate/followup/postEstate
 const putFollowupController = require("../controller/estate/followup/putEstateFollowup");
 const deleteFollowupController = require("../controller/estate/followup/deleteEstateFollowup");
 
+router.get("/recent", requestHandler(getRecentEstateController));
 router.get("/:id", requestHandler(getEstateController));
 router.get("/type/all", requestHandler(getAllTypesController)); // should get filter query
 router.post("/", requestHandler(postEstateController));

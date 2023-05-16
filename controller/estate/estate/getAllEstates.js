@@ -34,7 +34,8 @@ const handler = async function (req, res) {
     rent_min_price,
     rent_max_price,
   } = req.query;
-  // todo change
+  
+  
   return await req.context.getEstates(
     null,
     sale_method,
