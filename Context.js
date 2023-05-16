@@ -64,12 +64,15 @@ module.exports = class Context
 		advertising_request.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
 		});
+		user.hasMany(advertising_request);
 		contact_us.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: true },
 		});
+		estate.hasMany(contact_us);
 		customer.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(customer);
 		customer.belongsTo(customer_stage, {
 			foreignKey: { name: "customer_stage_id", allowNull: false },
 		});
@@ -79,81 +82,102 @@ module.exports = class Context
 		customer_followup.belongsTo(customer, {
 			foreignKey: { name: "customer_id", allowNull: false },
 		});
+		customer.hasMany(customer_followup);
 		customer_followup.belongsTo(customer_stage, {
 			foreignKey: { name: "customer_stage_id", allowNull: false },
 		});
 		customer_followup.belongsTo(user, {
 			foreignKey: { name: "followup_user_id", allowNull: false },
 		});
+		user.hasMany(customer_followup);
 		estate.belongsTo(estate_type, {
 			foreignKey: { name: "estate_type_id", allowNull: false },
 		});
 		estate.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(estate);
 		estate.belongsTo(province, {
 			foreignKey: { name: "province_id", allowNull: false },
 		});
 		estate.belongsTo(city, {
 			foreignKey: { name: "city_id", allowNull: false },
 		});
+		city.belongsTo(province, {
+			foreignKey: { name: "province_id", allowNull: false },
+		});
+		province.hasMany(city);
 		estate_bookmark.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(estate_bookmark);
 		estate_bookmark.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(estate_bookmark);
 		estate_favorite.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(estate_favorite);
 		estate_favorite.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(estate_favorite);
 		estate_followup.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(estate_followup);
 		estate_followup.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(estate_followup);
 		estate_followup.belongsTo(customer, {
 			foreignKey: { name: "customer_id", allowNull: false },
 		});
+		customer.hasMany(estate_followup);
 		estate_image.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(estate_image);
 		estate_score.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(estate_score);
 		estate_score.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(estate_score);
 		meeting.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
+		user.hasMany(meeting);
 		meeting.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
+		estate.hasMany(meeting);
 		meeting.belongsTo(customer, {
 			foreignKey: { name: "customer_id", allowNull: false },
 		});
+		customer.hasMany(meeting);
 		message.belongsTo(user, {
 			foreignKey: { name: "sender_id", allowNull: false },
 		});
 		message.belongsTo(user, {
 			foreignKey: { name: "receiver_id", allowNull: false },
 		});
+		user.hasMany(message);
 		setting.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
 		});
+		user.hasMany(setting);
 		sms.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
 		});
+		user.hasMany(sms);
 		support_request.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: true },
 		});
-		city.belongsTo(province, {
-			foreignKey: { name: "province_id", allowNull: false },
-		});
+		user.hasMany(support_request);
 
 		this.database.sync({ force: false });
 	}
@@ -409,22 +433,20 @@ module.exports = class Context
 					as: "city",
 					attributes: ["name"]
 				},
+				{
+					model: this.database.models.estate_image,
+					required: false
+				}
 			],
 		};
 		return options;
 	}
+
 	async getEstate(id)
 	{
 		let options = this.setEstateOptions();
 		options.where.id = id;
 		let estate = await this.getModel("estate", options);
-		if (estate)
-		{
-			let images = await this.database.models.estate_image.findAll({
-				where: { estate_id: id },
-			});
-			estate.dataValues.images = images;
-		}
 		return estate;
 	}
 
