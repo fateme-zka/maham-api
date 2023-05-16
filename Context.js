@@ -412,6 +412,12 @@ module.exports = class Context
 				sold: false,
 				active: true,
 			},
+			attributes: {
+				include: [
+					[Sequelize.fn("COUNT", Sequelize.col("estate_favorites.id")), "favorite_count"],
+					[Sequelize.fn("AVG", Sequelize.col("estate_scores.score")), "score_average"]
+				],
+			},
 			include: [
 				{
 					model: this.database.models.user,
@@ -435,6 +441,17 @@ module.exports = class Context
 				},
 				{
 					model: this.database.models.estate_image,
+					attributes: ['image'],
+					required: false
+				},
+				{
+					model: this.database.models.estate_favorite,
+					attributes: [],
+					required: false
+				},
+				{
+					model: this.database.models.estate_score,
+					attributes: [],
 					required: false
 				}
 			],
