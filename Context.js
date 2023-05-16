@@ -1,6 +1,8 @@
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
 const error_operation = require("./util/error_operation");
+const PAGE = 1;
+const PAGE_SIZE = 20;
 
 module.exports = class Context
 {
@@ -225,6 +227,18 @@ module.exports = class Context
 		return value;
 	}
 
+	pagination(page, page_size, options)
+	{
+		if (!options)
+			options = {};
+		page = page !== undefined ? parseInt(page) : PAGE;
+		page_size = page_size !== undefined ? parseInt(page_size) : PAGE_SIZE;
+		let offset = (page - 1) * page_size;
+		options.limit = page_size;
+		options.offset = offset;
+		return options;
+	}
+
 	//#region User
 	async getUser(column, value, exclude)
 	{
@@ -358,6 +372,8 @@ module.exports = class Context
 
 	async getEstates(
 		user_id,
+		page,
+		page_size,
 		sale_method,
 		estate_type_id,
 		meter,
@@ -374,8 +390,8 @@ module.exports = class Context
 		rent_max_price
 	)
 	{
-		let where = { verified: true, sold: false, active: true };
-		where = this.whereEstates(
+		let options = this.setEstateOptions();
+		options.where = this.whereEstates(
 			sale_method,
 			estate_type_id,
 			meter,
@@ -390,13 +406,13 @@ module.exports = class Context
 			pawn_max_price,
 			rent_min_price,
 			rent_max_price,
-			where
+			options.where
 		);
-		if (user_id) where.user_id = user_id;
-		return this.database.models.estate.findAll({
-			where,
-			limit: 30, // todo pagination
-		});
+		if (user_id) options.where.user_id = user_id;
+
+		options = this.pagination(page, page_size, options);
+		options.order = ["created_at"];
+		return this.database.models.estate.findAll(options);
 	}
 
 	async getEstateTypes()
@@ -414,8 +430,19 @@ module.exports = class Context
 			},
 			attributes: {
 				include: [
-					[Sequelize.fn("COUNT", Sequelize.col("estate_favorites.id")), "favorite_count"],
-					[Sequelize.fn("AVG", Sequelize.col("estate_scores.score")), "score_average"]
+					[
+						Sequelize.literal(`(
+							SELECT COUNT(estate_favorite.id) FROM estate_favorite 
+							WHERE estate_favorite.estate_id=estate.id AND estate_favorite.deleted_at IS NULL
+							)`),
+						"favorite_count"
+					], [
+						Sequelize.literal(`(
+							SELECT AVG(estate_score.score) FROM estate_score 
+							WHERE estate_score.estate_id=estate.id AND estate_score.deleted_at IS NULL
+							)`),
+						"score_average"
+					],
 				],
 			},
 			include: [
