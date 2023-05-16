@@ -457,7 +457,7 @@ module.exports = class Context
 
 	async deleteEstate(id)
 	{
-		await this.database.models.estate.destroy({ where: { id } });
+		return await this.deleteModel("estate", { where: { id } });
 	}
 
 	async activeEstate(id, active)

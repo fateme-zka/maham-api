@@ -27,8 +27,9 @@ const requestHandler = require("../middleware/requestHandler");
 
 // new
 const postEstateController = require("../controller/estate/estate/postEstate");
-const activeController = require("../controller/estate/estate/activeEstate");
-const soldController = require("../controller/estate/estate/soldEstate");
+const activeEstateController = require("../controller/estate/estate/activeEstate");
+const soldEstateController = require("../controller/estate/estate/soldEstate");
+const deleteEstateController = require("../controller/estate/estate/deleteEstate");
 
 const getAllFollowupsController = require("../controller/estate/followup/getAllEstateFollowup");
 const postFollowupController = require("../controller/estate/followup/postEstateFollowup");
@@ -36,8 +37,9 @@ const putFollowupController = require("../controller/estate/followup/putEstateFo
 const deleteFollowupController = require("../controller/estate/followup/deleteEstateFollowup");
 
 router.post("/", requestHandler(postEstateController));
-router.put("/active/:id", requestHandler(activeController));
-router.put("/sold/:id", requestHandler(soldController));
+router.put("/active/:id", requestHandler(activeEstateController));
+router.put("/sold/:id", requestHandler(soldEstateController));
+router.delete("/:id", requestHandler(deleteEstateController));
 
 router.get("/followup/all", requestHandler(getAllFollowupsController));
 router.post("/followup", requestHandler(postFollowupController));
