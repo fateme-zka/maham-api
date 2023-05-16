@@ -17,4 +17,4 @@ const handler = async function (req)
 	return await req.context.activeEstate(id, active);
 };
 
-module.exports = { handler, body_schema, auth: true };
+module.exports = { handler, body_schema, auth: true, auth_consultant: true };
