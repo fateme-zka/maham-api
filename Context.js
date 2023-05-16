@@ -386,12 +386,19 @@ module.exports = class Context
 			where: { id },
 			include: [
 				{
+					model: this.database.models.user,
+					as: "user",
+					attributes: ["name", "email", "phone_number"]
+				},
+				{
 					model: this.database.models.province,
 					as: "province",
+					attributes: ["name"]
 				},
 				{
 					model: this.database.models.city,
 					as: "city",
+					attributes: ["name"]
 				},
 			],
 		});
