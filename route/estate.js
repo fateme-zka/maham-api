@@ -3,13 +3,13 @@ const router = require("express").Router();
 const requestHandler = require("../middleware/requestHandler");
 
 // estate
-const getEstateController = require("../controller/estate/estate/getEstate");
+const getEstateController = require("../controller/estate/estate/get");
 const getRecentEstateController = require("../controller/estate/estate/getRecents");
 const getAllTypesController = require("../controller/estate/estate/getAllTypes");
-const postEstateController = require("../controller/estate/estate/postEstate");
-const activeEstateController = require("../controller/estate/estate/activeEstate");
-const soldEstateController = require("../controller/estate/estate/soldEstate");
-const deleteEstateController = require("../controller/estate/estate/deleteEstate");
+const postEstateController = require("../controller/estate/estate/post");
+const activeEstateController = require("../controller/estate/estate/active");
+const soldEstateController = require("../controller/estate/estate/sold");
+const deleteEstateController = require("../controller/estate/estate/delete");
 
 // followup
 const getAllFollowupsController = require("../controller/estate/followup/getAllEstateFollowup");
