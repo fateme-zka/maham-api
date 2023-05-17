@@ -239,6 +239,41 @@ module.exports = class Context
 		return options;
 	}
 
+	//#region Info
+	async countEstates()
+	{
+		let all_estates = await this.database.models.estate.count({ where: { verified: true } });
+		let sell_estates = await this.database.models.estate.count({
+			where: {
+				verified: true,
+				sold: true,
+				sale_method: "sell"
+			}
+		});
+		let pawn_estates = await this.database.models.estate.count({
+			where: {
+				verified: true,
+				sold: true,
+				sale_method: "pawn"
+			}
+		});
+		let rent_estates = await this.database.models.estate.count({
+			where: {
+				verified: true,
+				sold: true,
+				sale_method: "rent"
+			}
+		});
+
+		return { all_estates, sell_estates, pawn_estates, rent_estates };
+	}
+
+	async countAllUsers()
+	{
+		return await this.database.models.user.count({ where: { admin: false } });
+	}
+	//#endregion
+
 	//#region User
 	async getUser(column, value, exclude)
 	{
