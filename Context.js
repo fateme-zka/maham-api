@@ -326,6 +326,28 @@ module.exports = class Context
 	{
 		return await this.getModel("user_role", { where: { name: { [Op.like]: '%' + name.trim() + '%' } } });
 	}
+
+	async transferEstate(id, receiver_id)
+	{
+		let estate = await this.getModel("estate", {
+			where: {
+				id,
+				verified: true,
+				active: true
+			}
+		});
+		estate.user_id = receiver_id;
+		return await estate.save();
+	}
+
+	async verifyEstate(id, user_id)
+	{
+		let estate = await this.getModel("estate", { where: { id } });
+		estate.verified = true;
+		if (user_id)
+			estate.user_id = user_id
+		return await estate.save();
+	}
 	//#endregion
 
 	//#region Province/City
@@ -341,98 +363,6 @@ module.exports = class Context
 	//#endregion
 
 	//#region Estate
-	whereEstates(
-		sale_method,
-		estate_type_id,
-		meter,
-		room_count,
-		province_id,
-		city_id,
-		total_min_price,
-		total_max_price,
-		meter_min_price,
-		meter_max_price,
-		pawn_min_price,
-		pawn_max_price,
-		rent_min_price,
-		rent_max_price,
-		where
-	)
-	{
-		if (!where) where = {};
-		if (sale_method) where.sale_method = sale_method;
-		if (estate_type_id) where.estate_type_id = estate_type_id;
-		if (meter)
-		{
-			let or = {
-				[Op.or]: [{ land_size_meter: meter }, { building_size_meter: meter }],
-			};
-			where = { ...where, ...or };
-		}
-		if (room_count) where.room_count = room_count;
-		if (province_id) where.province_id = province_id;
-		if (city_id) where.city_id = city_id;
-		if (total_min_price) where.total_price = { [Op.gte]: total_min_price };
-		if (total_max_price) where.total_price = { [Op.lte]: total_max_price };
-		if (meter_min_price) where.meter_price = { [Op.gte]: meter_min_price };
-		if (meter_max_price) where.meter_price = { [Op.lte]: meter_max_price };
-		if (pawn_min_price) where.pawn_price = { [Op.gte]: pawn_min_price };
-		if (pawn_max_price) where.pawn_price = { [Op.lte]: pawn_max_price };
-		if (rent_min_price) where.rent_price = { [Op.gte]: rent_min_price };
-		if (rent_max_price) where.rent_price = { [Op.lte]: rent_max_price };
-		return where;
-	}
-
-	async getEstates(
-		user_id,
-		page,
-		page_size,
-		sale_method,
-		estate_type_id,
-		meter,
-		room_count,
-		province_id,
-		city_id,
-		total_min_price,
-		total_max_price,
-		meter_min_price,
-		meter_max_price,
-		pawn_min_price,
-		pawn_max_price,
-		rent_min_price,
-		rent_max_price
-	)
-	{
-		let options = this.setEstateOptions();
-		options.where = this.whereEstates(
-			sale_method,
-			estate_type_id,
-			meter,
-			room_count,
-			province_id,
-			city_id,
-			total_min_price,
-			total_max_price,
-			meter_min_price,
-			meter_max_price,
-			pawn_min_price,
-			pawn_max_price,
-			rent_min_price,
-			rent_max_price,
-			options.where
-		);
-		if (user_id) options.where.user_id = user_id;
-
-		options = this.pagination(page, page_size, options);
-		options.order = ["created_at"];
-		return this.database.models.estate.findAll(options);
-	}
-
-	async getEstateTypes()
-	{
-		return this.database.models.estate_type.findAll();
-	}
-
 	setEstateOptions()
 	{
 		let options = {
@@ -499,12 +429,105 @@ module.exports = class Context
 		return options;
 	}
 
+	whereEstates(
+		sale_method,
+		estate_type_id,
+		meter,
+		room_count,
+		province_id,
+		city_id,
+		total_min_price,
+		total_max_price,
+		meter_min_price,
+		meter_max_price,
+		pawn_min_price,
+		pawn_max_price,
+		rent_min_price,
+		rent_max_price,
+		where
+	)
+	{
+		if (!where) where = {};
+		if (sale_method) where.sale_method = sale_method;
+		if (estate_type_id) where.estate_type_id = estate_type_id;
+		if (meter)
+		{
+			let or = {
+				[Op.or]: [{ land_size_meter: meter }, { building_size_meter: meter }],
+			};
+			where = { ...where, ...or };
+		}
+		if (room_count) where.room_count = room_count;
+		if (province_id) where.province_id = province_id;
+		if (city_id) where.city_id = city_id;
+		if (total_min_price) where.total_price = { [Op.gte]: total_min_price };
+		if (total_max_price) where.total_price = { [Op.lte]: total_max_price };
+		if (meter_min_price) where.meter_price = { [Op.gte]: meter_min_price };
+		if (meter_max_price) where.meter_price = { [Op.lte]: meter_max_price };
+		if (pawn_min_price) where.pawn_price = { [Op.gte]: pawn_min_price };
+		if (pawn_max_price) where.pawn_price = { [Op.lte]: pawn_max_price };
+		if (rent_min_price) where.rent_price = { [Op.gte]: rent_min_price };
+		if (rent_max_price) where.rent_price = { [Op.lte]: rent_max_price };
+		return where;
+	}
+
 	async getEstate(id)
 	{
 		let options = this.setEstateOptions();
 		options.where.id = id;
 		let estate = await this.getModel("estate", options);
 		return estate;
+	}
+
+
+	async getEstates(
+		user_id,
+		page,
+		page_size,
+		sale_method,
+		estate_type_id,
+		meter,
+		room_count,
+		province_id,
+		city_id,
+		total_min_price,
+		total_max_price,
+		meter_min_price,
+		meter_max_price,
+		pawn_min_price,
+		pawn_max_price,
+		rent_min_price,
+		rent_max_price
+	)
+	{
+		let options = this.setEstateOptions();
+		options.where = this.whereEstates(
+			sale_method,
+			estate_type_id,
+			meter,
+			room_count,
+			province_id,
+			city_id,
+			total_min_price,
+			total_max_price,
+			meter_min_price,
+			meter_max_price,
+			pawn_min_price,
+			pawn_max_price,
+			rent_min_price,
+			rent_max_price,
+			options.where
+		);
+		if (user_id) options.where.user_id = user_id;
+
+		options = this.pagination(page, page_size, options);
+		options.order = ["created_at"];
+		return this.database.models.estate.findAll(options);
+	}
+
+	async getEstateTypes()
+	{
+		return this.database.models.estate_type.findAll();
 	}
 
 	async getRecentEstates(limit)
@@ -532,43 +555,29 @@ module.exports = class Context
 		return estate;
 	}
 
-	async verifyEstate(id, user_id)
-	{
-		let estate = await this.getModel("estate", { where: { id } });
-		estate.verified = true;
-		if (user_id)
-			estate.user_id = user_id
-		return await estate.save();
-	}
-
-	async updateEstate(id, images, fields)
-	{
-		let values = {};
-		Object.keys(fields).forEach((key) =>
-		{
-			if (fields[key]) values[key] = fields[key];
-		});
-		let estate = await this.database.models.estate.update(values, {
-			where: { id },
-		});
-		// replace all images
-		await this.database.models.estate_image.destroy({
-			where: { estate_id: id },
-		});
-		images.forEach(async (image) =>
-		{
-			await this.createModel("estate_image", {
-				estate_id: id,
-				image,
-			});
-		});
-		return estate;
-	}
-
-	async deleteEstate(id)
-	{
-		return await this.deleteModel("estate", { where: { id } });
-	}
+	// async updateEstate(id, images, fields)
+	// {
+	// 	let values = {};
+	// 	Object.keys(fields).forEach((key) =>
+	// 	{
+	// 		if (fields[key]) values[key] = fields[key];
+	// 	});
+	// 	let estate = await this.database.models.estate.update(values, {
+	// 		where: { id },
+	// 	});
+	// 	// replace all images
+	// 	await this.database.models.estate_image.destroy({
+	// 		where: { estate_id: id },
+	// 	});
+	// 	images.forEach(async (image) =>
+	// 	{
+	// 		await this.createModel("estate_image", {
+	// 			estate_id: id,
+	// 			image,
+	// 		});
+	// 	});
+	// 	return estate;
+	// }
 
 	async activeEstate(id, active)
 	{
@@ -580,25 +589,12 @@ module.exports = class Context
 		return await this.database.models.estate.update({ sold }, { where: { id } });
 	}
 
-	async transferEstate(id, receiver_id)
+	async deleteEstate(id)
 	{
-		return await this.database.models.estate.update(
-			{ user_id: receiver_id },
-			{ where: { id } }
-		);
+		return await this.deleteModel("estate", { where: { id } });
 	}
 
-	async getEstateType(name)
-	{
-		return await this.database.models.estate_type.findOne({
-			where: {
-				name: {
-					[Op.like]: "%" + name.trim() + "%",
-				},
-			},
-		});
-	}
-
+	// estate followup
 	async getEstateFollowups(user_id)
 	{
 		let user = await this.getUser("id", user_id);
