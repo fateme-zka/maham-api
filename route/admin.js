@@ -2,11 +2,15 @@ const router = require("express").Router();
 
 const requestHandler = require("../middleware/requestHandler");
 
-const verifyController = require("../controller/admin/verifyEstate");
-const getAllUsersController = require("../controller/admin/getAllUsers");
-const postUserController = require("../controller/admin/postUser");
+// estate
+const verifyEstateController = require("../controller/admin/estate/verify");
 
-router.get("/estate/verify/:id", requestHandler(verifyController));
+// user
+const getAllUsersController = require("../controller/admin/user/getAllUsers");
+const postUserController = require("../controller/admin/user/postUser");
+
+router.put("/estate/verify/:id", requestHandler(verifyEstateController));
+
 router.get("/user/all", requestHandler(getAllUsersController));
 router.post("/user", requestHandler(postUserController));
 

@@ -298,6 +298,19 @@ module.exports = class Context
 	//#endregion
 
 	//#region Admin
+	async getUserPosition(id)
+	{
+		let user = await this.getModel("user", {
+			where: { id },
+			include: {
+				model: this.database.models.user_role,
+				as: "user_role",
+				required: true
+			},
+		});
+		return user.user_role.position;
+	}
+
 	async getUsers(user_role_name)
 	{
 		return await this.database.models.user.findAll({
@@ -519,12 +532,13 @@ module.exports = class Context
 		return estate;
 	}
 
-	async verifyEstate(id)
+	async verifyEstate(id, user_id)
 	{
-		return await this.database.models.estate.update(
-			{ verified: true },
-			{ where: { id } }
-		);
+		let estate = await this.getModel("estate", { where: { id } });
+		estate.verified = true;
+		if (user_id)
+			estate.user_id = user_id
+		return await estate.save();
 	}
 
 	async updateEstate(id, images, fields)
