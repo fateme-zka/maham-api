@@ -3,7 +3,7 @@ const Joi = require("joi");
 const body_schema = Joi.object({
 	estate_id: Joi.number().allow(""),
 	name: Joi.string().required(),
-	email: Joi.string().allow(""),
+	email: Joi.string().required(),
 	phone_number: Joi.string().allow(""),
 	title: Joi.string().allow(""),
 	text: Joi.string().required(),
