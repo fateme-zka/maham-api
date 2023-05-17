@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const Phone = require("phone");
 
 const body_schema = Joi.object({
 	estate_id: Joi.number().allow(""),
@@ -12,6 +13,14 @@ const body_schema = Joi.object({
 const handler = async function (req)
 {
 	let { estate_id, name, email, phone_number, title, text } = req.body;
+
+	// check phone_number
+	if (phone_number)
+	{
+		if (!Phone.phone(phone_number).isValid)
+			req.throw(400, "Invalid phone number.");
+	}
+
 	if (req.user)
 	{
 		email = req.user.email;

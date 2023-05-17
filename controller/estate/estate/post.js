@@ -136,8 +136,6 @@ const handler = async function (req)
 	{
 		if (!Phone.phone(phone_number).isValid)
 			req.throw(400, "Invalid phone number.");
-		user = await req.context.getUser("phone_number", phone_number);
-		if (user) req.throw(400, "Phone number already exists.");
 	}
 
 

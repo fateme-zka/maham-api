@@ -18,6 +18,8 @@ const handler = async function (req)
 	{
 		if (!Phone.phone(phone_number).isValid)
 			req.throw(400, "Invalid phone number.");
+		let customer = await req.context.getModel("customer", { where: { phone_number } });
+		if (customer) req.throw(400, "Phone number already exists.");
 	}
 
 	return await req.context.addCustomer(user_id, customer_stage_id, name, phone_number, address);
