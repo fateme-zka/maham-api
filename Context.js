@@ -572,6 +572,43 @@ module.exports = class Context
 		return await this.database.models.estate.findAll(options);
 	}
 
+	async getFavoriteEstateCities(limit)
+	{
+		let options = {
+			where: { verified: true },
+			include: [
+				{
+					model: this.database.models.city,
+					as: "city",
+					attributes: [],
+					required: true
+				},
+				{
+					model: this.database.models.estate_favorite,
+					attributes: [],
+					required: false
+				}
+			],
+			attributes: [
+				[
+					Sequelize.literal(`(
+						SELECT COUNT(estate_favorite.id) FROM estate_favorite 
+						WHERE estate_favorite.estate_id=estate.id AND estate_favorite.deleted_at IS NULL
+						)`),
+					"favorite_count"
+				],
+				[Sequelize.literal('city.name'), 'city_name']
+			],
+			// group: ["estate_favorite.id"],
+			// order: ["favorite_count"],
+			limit
+		}
+		let estates = await this.database.models.estate.findAll(options);
+		estates.sort((a, b) => b.id - a.id);
+		// estates = estates.map(estate => estate.dataValues.city_name);
+		return estates;
+	}
+
 	async addEstate(values, images)
 	{
 		let estate = await this.createModel("estate", values);
