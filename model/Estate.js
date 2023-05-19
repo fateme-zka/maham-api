@@ -72,7 +72,6 @@ module.exports = (sequelize, DataTypes) =>
 		camera: { type: DataTypes.BOOLEAN, allowNull: true },
 		video_door_phone: { type: DataTypes.BOOLEAN, allowNull: true },
 		pool: { type: DataTypes.BOOLEAN, allowNull: true },
-
 		// sale
 		sale_method: {
 			type: Sequelize.ENUM(methods),

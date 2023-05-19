@@ -514,7 +514,6 @@ module.exports = class Context
 		return estate;
 	}
 
-
 	async getEstates(
 		user_id,
 		page,
@@ -707,20 +706,18 @@ module.exports = class Context
 	//#endregion
 
 	//#region Estate Reaction
-	async likeEstate(estate_id, user_id, like)
+	async favoriteEstate(estate_id, user_id, favorite)
 	{
-		if (!like)
+		if (!favorite)
 		{
-			await this.database.models.like.destroy({
+			await this.database.models.estate_favorite.destroy({
 				where: { user_id, estate_id },
 			});
-			return;
+			return {};
 		}
-		like = await this.database.models.like.findOne({
-			where: { user_id, estate_id },
-		});
-		if (!like)
-			return await this.createModel("like", { user_id, estate_id });
+		let estate_favorite = await this.getModel("estate_favorite", { where: { user_id, estate_id } }, null, true);
+		if (!estate_favorite)
+			return await this.createModel("estate_favorite", { user_id, estate_id });
 	}
 
 	async countLikes(estate_id)
