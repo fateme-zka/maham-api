@@ -9,6 +9,7 @@ const getRecentEstateController = require("../controller/estate/estate/getRecent
 const getFavoriteEstateCitiesController = require("../controller/estate/estate/getRecents");
 const getAllTypesController = require("../controller/estate/estate/getAllTypes");
 const postEstateController = require("../controller/estate/estate/post");
+const postEstateScoreController = require("../controller/estate/score/post");
 const favoriteEstateController = require("../controller/estate/favorite/switch");
 const activeEstateController = require("../controller/estate/estate/active");
 const soldEstateController = require("../controller/estate/estate/sold");
@@ -26,6 +27,7 @@ router.get("/favorite/city/all", requestHandler(getFavoriteEstateCitiesControlle
 router.get("/:id", requestHandler(getEstateController));
 router.get("/type/all", requestHandler(getAllTypesController)); // should get filter query
 router.post("/", requestHandler(postEstateController));
+router.post("/score/:id", requestHandler(postEstateScoreController));
 router.put("/favorite/:id", requestHandler(favoriteEstateController));
 router.put("/active/:id", requestHandler(activeEstateController));
 router.put("/sold/:id", requestHandler(soldEstateController));

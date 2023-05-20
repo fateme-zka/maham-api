@@ -706,7 +706,7 @@ module.exports = class Context
 	//#endregion
 
 	//#region Estate Reaction
-	async favoriteEstate(estate_id, user_id, favorite)
+	async switchFavoriteEstate(estate_id, user_id, favorite)
 	{
 		if (!favorite)
 		{
@@ -720,20 +720,28 @@ module.exports = class Context
 			return await this.createModel("estate_favorite", { user_id, estate_id });
 	}
 
-	async countLikes(estate_id)
-	{
-		return await this.database.models.like.count({
-			where: { estate_id },
-		});
-	}
+	// async checkFavoriteEstate(estate_id, user_id)
+	// {
+	// 	let estate_favorite = await this.database.models.estate_favorite.findOne({
+	// 		where: { user_id, estate_id },
+	// 	});
+	// 	if (estate_favorite) return { favorite: true };
+	// 	return { favorite: false };
+	// }
 
-	async checkLike(estate_id, user_id)
+	async addScoreEstate(estate_id, user_id, score)
 	{
-		let like = await this.database.models.like.findOne({
-			where: { user_id, estate_id },
+		let estate_score = await this.getModel("estate_score", { where: { estate_id, user_id } }, null, true);
+		if (estate_score)
+		{
+			estate_score.score = score;
+			return await estate_score.save();
+		}
+		return await this.createModel("estate_score", {
+			estate_id,
+			user_id,
+			score,
 		});
-		if (like) return { like: true };
-		return { like: false };
 	}
 
 	async bookmarkEstate(estate_id, user_id, bookmark)
@@ -801,24 +809,6 @@ module.exports = class Context
 	async deleteComment(id)
 	{
 		await this.database.models.comment.destroy({ where: { id } });
-	}
-
-	async addScore(estate_id, user_id, star)
-	{
-		return await this.createModel("score", {
-			estate_id,
-			user_id,
-			star,
-		});
-	}
-
-	async countScores(estate_id)
-	{
-		let bind = { estate_id };
-		let query = `SELECT COUNT(*), SUM(star) FROM score WHERE estate_id=$estate_id;`;
-		let [result] = await this.database.query(query, { bind });
-		let rate = result[0]["SUM(star)"] / result[0]["COUNT(*)"];
-		return { rate };
 	}
 	//#endregion
 

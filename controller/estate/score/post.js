@@ -1,16 +1,16 @@
 const Joi = require("joi");
 
 const body_schema = Joi.object({
-	favorite: Joi.boolean().required(),
+	score: Joi.number().required().valid(0, 1, 2, 3, 4, 5),
 });
 
 const handler = async function (req)
 {
 	let { id } = req.params;
-	let { favorite } = req.body;
+	let { score } = req.body;
 	let user_id = req.user.id;
 
-	return await req.context.switchFavoriteEstate(id, user_id, favorite);
+	return await req.context.addScoreEstate(id, user_id, score);
 };
 
 module.exports = { handler, body_schema, auth: true };
