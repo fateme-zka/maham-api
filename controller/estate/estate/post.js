@@ -3,7 +3,7 @@ const Phone = require("phone");
 
 const body_schema = Joi.object({
 	estate_type_id: Joi.number().required(),
-	sale_method: Joi.string().required(),
+	sale_method: Joi.string().required().valid("rent", "pawn", "sell"),
 	name: Joi.string().required(),
 	phone_number: Joi.string().required(),
 	email: Joi.string().allow(""),

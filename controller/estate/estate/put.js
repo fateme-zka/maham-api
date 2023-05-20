@@ -15,7 +15,7 @@ const body_schema = Joi.object({
   building_size_meter: Joi.number().positive().allow(""),
   loan: Joi.boolean().allow(""),
   document_type: Joi.string().allow(""),
-  sale_method: Joi.string().allow(""),
+  sale_method: Joi.string().allow("").valid("rent", "pawn", "sell"),
   total_price: Joi.number().positive().allow(""),
   meter_price: Joi.number().positive().allow(""),
   pawn_price: Joi.number().positive().allow(""),

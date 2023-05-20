@@ -464,45 +464,21 @@ module.exports = class Context
 		return options;
 	}
 
-	whereEstates(
-		sale_method,
-		estate_type_id,
-		meter,
-		room_count,
-		province_id,
-		city_id,
-		total_min_price,
-		total_max_price,
-		meter_min_price,
-		meter_max_price,
-		pawn_min_price,
-		pawn_max_price,
-		rent_min_price,
-		rent_max_price,
-		where
+	whereEstates(estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price, where
 	)
 	{
 		if (!where) where = {};
+		if (estate_type_id) where.estate_type_id = parseInt(estate_type_id);
 		if (sale_method) where.sale_method = sale_method;
-		if (estate_type_id) where.estate_type_id = estate_type_id;
-		if (meter)
-		{
-			let or = {
-				[Op.or]: [{ land_size_meter: meter }, { building_size_meter: meter }],
-			};
-			where = { ...where, ...or };
-		}
-		if (room_count) where.room_count = room_count;
-		if (province_id) where.province_id = province_id;
-		if (city_id) where.city_id = city_id;
-		if (total_min_price) where.total_price = { [Op.gte]: total_min_price };
-		if (total_max_price) where.total_price = { [Op.lte]: total_max_price };
-		if (meter_min_price) where.meter_price = { [Op.gte]: meter_min_price };
-		if (meter_max_price) where.meter_price = { [Op.lte]: meter_max_price };
-		if (pawn_min_price) where.pawn_price = { [Op.gte]: pawn_min_price };
-		if (pawn_max_price) where.pawn_price = { [Op.lte]: pawn_max_price };
-		if (rent_min_price) where.rent_price = { [Op.gte]: rent_min_price };
-		if (rent_max_price) where.rent_price = { [Op.lte]: rent_max_price };
+		if (city_id) where.city_id = parseInt(city_id);
+		if (total_min_price) where.total_price = { [Op.gte]: parseInt(total_min_price) };
+		if (total_max_price) where.total_price = { [Op.lte]: parseInt(total_max_price) };
+		if (meter_min_price) where.meter_price = { [Op.gte]: parseInt(meter_min_price) };
+		if (meter_max_price) where.meter_price = { [Op.lte]: parseInt(meter_max_price) };
+		if (pawn_min_price) where.pawn_price = { [Op.gte]: parseInt(pawn_min_price) };
+		if (pawn_max_price) where.pawn_price = { [Op.lte]: parseInt(pawn_max_price) };
+		if (rent_min_price) where.rent_price = { [Op.gte]: parseInt(rent_min_price) };
+		if (rent_max_price) where.rent_price = { [Op.lte]: parseInt(rent_max_price) };
 		return where;
 	}
 
@@ -514,33 +490,13 @@ module.exports = class Context
 		return estate;
 	}
 
-	async getEstates(
-		user_id,
-		page,
-		page_size,
-		sale_method,
-		estate_type_id,
-		meter,
-		room_count,
-		province_id,
-		city_id,
-		total_min_price,
-		total_max_price,
-		meter_min_price,
-		meter_max_price,
-		pawn_min_price,
-		pawn_max_price,
-		rent_min_price,
-		rent_max_price
+	async getEstates(user_id, page, page_size, estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price,
 	)
 	{
 		let options = this.setEstateOptions();
 		options.where = this.whereEstates(
-			sale_method,
 			estate_type_id,
-			meter,
-			room_count,
-			province_id,
+			sale_method,
 			city_id,
 			total_min_price,
 			total_max_price,
