@@ -323,6 +323,28 @@ module.exports = class Context
 		});
 		return await this.database.models.user.update(values, { where: { id } });
 	}
+
+	async getConsultants(role)
+	{
+		let options = {
+			include: {
+				model: this.database.models.user_role,
+				as: "user_role",
+				where: { position: { [Op.not]: process.env.consumer_role_position } }
+			}
+		};
+		if (role)
+		{
+			// todo filter
+			if (role == "searcher")
+				options.include.where = { position: process.env.searcher_role_position };
+			else if (role == "attracter")
+				options.include.where = { position: process.env.attracter_role_position };
+			else if (role == "admin")
+				options.include.where = { position: process.env.admin_role_position };
+		}
+		return await this.database.models.user.findAll(options);
+	}
 	//#endregion
 
 	//#region Admin
