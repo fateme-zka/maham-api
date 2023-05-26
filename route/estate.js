@@ -13,6 +13,7 @@ const postEstateScoreController = require("../controller/estate/score/post");
 const favoriteEstateController = require("../controller/estate/favorite/switch");
 const activeEstateController = require("../controller/estate/estate/active");
 const soldEstateController = require("../controller/estate/estate/sold");
+const putEstateController = require("../controller/estate/estate/put");
 const deleteEstateController = require("../controller/estate/estate/delete");
 
 // followup
@@ -31,6 +32,7 @@ router.post("/score/:id", requestHandler(postEstateScoreController));
 router.put("/favorite/:id", requestHandler(favoriteEstateController));
 router.put("/active/:id", requestHandler(activeEstateController));
 router.put("/sold/:id", requestHandler(soldEstateController));
+router.put("/update/:id", requestHandler(putEstateController));
 router.delete("/:id", requestHandler(deleteEstateController));
 
 router.get("/followup/all", requestHandler(getAllFollowupsController));

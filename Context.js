@@ -295,14 +295,7 @@ module.exports = class Context
 		return await this.getModel("user", options, null, true);
 	}
 
-	async registerUser(
-		user_role_id,
-		admin,
-		email,
-		password,
-		name,
-		phone_number,
-		image
+	async registerUser(user_role_id, admin, email, password, name, phone_number, image
 	)
 	{
 		let values = {
@@ -464,8 +457,7 @@ module.exports = class Context
 		return options;
 	}
 
-	whereEstates(estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price, where
-	)
+	whereEstates(estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price, where)
 	{
 		if (!where) where = {};
 		if (estate_type_id) where.estate_type_id = parseInt(estate_type_id);
@@ -490,8 +482,7 @@ module.exports = class Context
 		return estate;
 	}
 
-	async getEstates(user_id, page, page_size, estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price,
-	)
+	async getEstates(user_id, page, page_size, estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price,)
 	{
 		let options = this.setEstateOptions();
 		options.where = this.whereEstates(
@@ -582,29 +573,50 @@ module.exports = class Context
 		return estate;
 	}
 
-	// async updateEstate(id, images, fields)
-	// {
-	// 	let values = {};
-	// 	Object.keys(fields).forEach((key) =>
-	// 	{
-	// 		if (fields[key]) values[key] = fields[key];
-	// 	});
-	// 	let estate = await this.database.models.estate.update(values, {
-	// 		where: { id },
-	// 	});
-	// 	// replace all images
-	// 	await this.database.models.estate_image.destroy({
-	// 		where: { estate_id: id },
-	// 	});
-	// 	images.forEach(async (image) =>
-	// 	{
-	// 		await this.createModel("estate_image", {
-	// 			estate_id: id,
-	// 			image,
-	// 		});
-	// 	});
-	// 	return estate;
-	// }
+	async updateEstate(id, sale_fields, estate_fields, images)
+	{
+		let estate = await this.getModel("estate", { where: { id } });
+		Object.keys(estate_fields).forEach((column) =>
+		{
+			estate[column] = estate_fields[column];
+		});
+
+		// check if sale_method updated
+		if (estate.sale_method != sale_fields.sale_method)
+		{
+			estate.sale_method = sale_fields.sale_method;
+			if (sale_fields.sale_method == "rent")
+			{
+				estate.total_price = null;
+				estate.meter_price = null;
+				estate.pawn_price = sale_fields.pawn_price;
+				estate.rent_price = sale_fields.rent_price;
+			}
+			else if (sale_fields.sale_method == "pawn")
+			{
+				estate.total_price = null;
+				estate.meter_price = null;
+				estate.pawn_price = sale_fields.pawn_price;
+				estate.rent_price = null;
+			}
+			else if (sale_fields.sale_method == "sell")
+			{
+				estate.total_price = sale_fields.total_price;
+				estate.meter_price = sale_fields.meter_price;
+				estate.pawn_price = null;
+				estate.rent_price = null;
+			}
+		}
+		estate = await estate.save();
+
+		// replace all estate's images
+		await this.database.models.estate_image.destroy({ where: { estate_id: id } });
+		images.forEach(async (image) =>
+		{
+			await this.createModel("estate_image", { estate_id: id, image });
+		});
+		return estate;
+	}
 
 	async activeEstate(id, active)
 	{
