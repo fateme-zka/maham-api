@@ -22,7 +22,7 @@ const handler = async function (req)
 
 	// check email
 	let user = await req.context.getUser("email", email);
-	if (user) req.throw(400, "Username (email) already exists.");
+	if (user) req.throw(400, "Email already exists.");
 
 	// check phone_number
 	if (phone_number)
