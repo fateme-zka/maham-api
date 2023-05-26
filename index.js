@@ -4,6 +4,16 @@ require("dotenv").config();
 // Winston
 const Winston = require("./config/winston");
 
+// Error capture
+const Uncaught = require('uncaught');
+const email_operation = require("./util/email_operation");
+Uncaught.start();
+Uncaught.addListener((err) =>
+{
+	Winston.error("Uncaught error.", err);
+	email_operation.sendExeption(err);
+});
+
 // Express
 const Express = require("express");
 const app = Express();
@@ -23,6 +33,7 @@ app.use("/", require("./route/route"));
 
 // Start server
 const port = process.env.server_port;
-app.listen(port, () => {
-  Winston.info(`Server listening on port ${port}`);
+app.listen(port, () =>
+{
+	Winston.info(`Server listening on port ${port}`);
 });

@@ -1,56 +1,68 @@
 const nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var env_operation = require('./env_operation');
-let namira_email_host = env_operation.getOrError('namira_email_host');
-let namira_email_username = env_operation.getOrError('namira_email_username');
-let namira_email_password = env_operation.getOrError('namira_email_password');
-let namira_email_error_title = env_operation.getOrError('namira_email_error_title');
-let namira_email_error_recipients = env_operation.getOrError('namira_email_error_recipients');
+let maham_email_host = env_operation.getOrError('maham_email_host');
+let maham_email_username = env_operation.getOrError('maham_email_username');
+let maham_email_password = env_operation.getOrError('maham_email_password');
+let maham_email_error_title = env_operation.getOrError('maham_email_error_title');
+let maham_email_error_recipients = env_operation.getOrError('maham_email_error_recipients');
 
-function sendError(message, callback, title) {
+function sendExeption(error, meta, callback)
+{
+    let title = error.message;
+    let message = title;
+    if (meta)
+        message += "\r\n" + JSON.stringify(meta);
+    message += "\r\n" + error.stack;
+    sendError(title, message, callback);
+}
+
+function sendError(title, message, callback)
+{
     if (!title)
         title = '';
-    let toks = namira_email_error_recipients.split(',');
-    for (let i = 0; i < toks.length; i++) {
+    let toks = maham_email_error_recipients.split(',');
+    for (let i = 0; i < toks.length; i++)
+    {
         const email = toks[i];
         send(
             email,
-            namira_email_error_title + " - " + title,
+            maham_email_error_title + " - " + title,
             message, undefined, callback
         );
     }
 }
 
 function send(to, subject, text, html, callback) {
-    if (!namira_email_username)
+    if (!maham_email_username)
         return;
-    if (!namira_email_password)
+    if (!maham_email_password)
         return;
     let transform = {}
-    if (namira_email_host === 'gmail')
+    if (maham_email_host === 'gmail')
         transform = smtpTransport({
             service: 'gmail',
             host: 'smtp.gmail.com',
             auth: {
-                user: namira_email_username,
-                pass: namira_email_password
+                user: maham_email_username,
+                pass: maham_email_password
             }
         });
     else
         transform = {
-            host: namira_email_host,
+            host: maham_email_host,
             port: 465,
             secure: true,
             auth: {
-                user: namira_email_username,
-                pass: namira_email_password
+                user: maham_email_username,
+                pass: maham_email_password
             }
         };
 
     let transporter = nodemailer.createTransport(transform);
 
     let mailOptions = {
-        from: namira_email_username,
+        from: maham_email_username,
         to,
         subject,
         text
@@ -70,6 +82,7 @@ function send(to, subject, text, html, callback) {
 }
 
 module.exports = {
+	sendExeption,
+    sendError,
     send,
-    sendError
 };
