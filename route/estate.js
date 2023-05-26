@@ -11,6 +11,7 @@ const getAllTypesController = require("../controller/estate/estate/getAllTypes")
 const postEstateController = require("../controller/estate/estate/post");
 const postEstateScoreController = require("../controller/estate/score/post");
 const favoriteEstateController = require("../controller/estate/favorite/switch");
+const bookmarkEstateController = require("../controller/estate/bookmark/switch");
 const activeEstateController = require("../controller/estate/estate/active");
 const soldEstateController = require("../controller/estate/estate/sold");
 const putEstateController = require("../controller/estate/estate/put");
@@ -30,6 +31,7 @@ router.get("/type/all", requestHandler(getAllTypesController)); // should get fi
 router.post("/", requestHandler(postEstateController));
 router.post("/score/:id", requestHandler(postEstateScoreController));
 router.put("/favorite/:id", requestHandler(favoriteEstateController));
+router.put("/bookmark/:id", requestHandler(bookmarkEstateController));
 router.put("/active/:id", requestHandler(activeEstateController));
 router.put("/sold/:id", requestHandler(soldEstateController));
 router.put("/update/:id", requestHandler(putEstateController));

@@ -710,6 +710,20 @@ module.exports = class Context
 			return await this.createModel("estate_favorite", { user_id, estate_id });
 	}
 
+	async switchBookmarkEstate(estate_id, user_id, bookmark)
+	{
+		if (!bookmark)
+		{
+			await this.database.models.estate_bookmark.destroy({
+				where: { user_id, estate_id },
+			});
+			return {};
+		}
+		let estate_bookmark = await this.getModel("estate_bookmark", { where: { user_id, estate_id } }, null, true);
+		if (!estate_bookmark)
+			return await this.createModel("estate_bookmark", { user_id, estate_id });
+	}
+
 	// async checkFavoriteEstate(estate_id, user_id)
 	// {
 	// 	let estate_favorite = await this.database.models.estate_favorite.findOne({
