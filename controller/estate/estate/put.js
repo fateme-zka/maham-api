@@ -73,6 +73,7 @@ const handler = async function (req)
 	if (!user.admin && estate.user_id !== user.id)
 		req.throw(401, "User is not estate's owner.");
 	let {
+		user_id,
 		name,
 		phone_number,
 		email,
@@ -137,6 +138,11 @@ const handler = async function (req)
 
 	if (!Phone.phone(phone_number).isValid)
 		req.throw(400, "Invalid phone number.");
+
+	let consultants = await req.context.getConsultants();
+	var consultant_ids = consultants.map(function (c) { return c.id; });
+	if (!consultant_ids.includes(user_id))
+		req.throw(400, "You can only assign this estate to another consultant or admin");
 
 	return await req.context.updateEstate(
 		id,
