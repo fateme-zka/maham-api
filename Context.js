@@ -724,6 +724,18 @@ module.exports = class Context
 			return await this.createModel("estate_bookmark", { user_id, estate_id });
 	}
 
+	async getUserBookmarkEstates(user_id)
+	{
+		return await this.database.models.estate_bookmark.findAll({
+			where: { user_id },
+			include: {
+				model: this.database.models.estate,
+				as: "estate",
+				required: true
+			}
+		});
+	}
+
 	// async checkFavoriteEstate(estate_id, user_id)
 	// {
 	// 	let estate_favorite = await this.database.models.estate_favorite.findOne({

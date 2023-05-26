@@ -10,6 +10,9 @@ const handler = async function (req)
 	let { favorite } = req.body;
 	let user_id = req.user.id;
 
+	// check estate
+	let estate = await req.context.getEstate(id);
+
 	return await req.context.switchFavoriteEstate(id, user_id, favorite);
 };
 

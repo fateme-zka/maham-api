@@ -4,10 +4,11 @@ const requestHandler = require("../middleware/requestHandler");
 
 // estate
 const getAllEstateController = require("../controller/estate/estate/getAll");
-const getEstateController = require("../controller/estate/estate/get");
 const getRecentEstateController = require("../controller/estate/estate/getRecents");
 const getFavoriteEstateCitiesController = require("../controller/estate/estate/getRecents");
 const getAllTypesController = require("../controller/estate/estate/getAllTypes");
+const getUserBookmarkEstatesController = require("../controller/estate/bookmark/getAll");
+const getEstateController = require("../controller/estate/estate/get");
 const postEstateController = require("../controller/estate/estate/post");
 const postEstateScoreController = require("../controller/estate/score/post");
 const favoriteEstateController = require("../controller/estate/favorite/switch");
@@ -26,8 +27,9 @@ const deleteFollowupController = require("../controller/estate/followup/deleteEs
 router.get("/all", requestHandler(getAllEstateController));
 router.get("/recent", requestHandler(getRecentEstateController));
 router.get("/favorite/city/all", requestHandler(getFavoriteEstateCitiesController));
-router.get("/:id", requestHandler(getEstateController));
 router.get("/type/all", requestHandler(getAllTypesController)); // should get filter query
+router.get("/bookmark/all", requestHandler(getUserBookmarkEstatesController)); // should get filter query
+router.get("/:id", requestHandler(getEstateController));
 router.post("/", requestHandler(postEstateController));
 router.post("/score/:id", requestHandler(postEstateScoreController));
 router.put("/favorite/:id", requestHandler(favoriteEstateController));
