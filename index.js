@@ -20,8 +20,12 @@ const app = Express();
 app.use(Express.json());
 
 // Cors
-const cors = require("cors");
-app.use(cors());
+const cors = require('cors');
+const corsOptions = {
+	exposedHeaders: '*',
+};
+app.use(cors(corsOptions));
+
 
 // Database
 const Context = require("./Context");
