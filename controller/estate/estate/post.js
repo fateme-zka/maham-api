@@ -131,13 +131,16 @@ const handler = async function (req)
 	} = req.body;
 	let user_id = req.user.id;
 
+	// check attracter consultant
+	if (req.user.user_role.position == process.env.attracter_role_position)
+		req.throw(403, "Attracter consultant can not add new estate!");
+
 	// check phone_number
 	if (phone_number)
 	{
 		if (!Phone.phone(phone_number).isValid)
 			req.throw(400, "Invalid phone number.");
 	}
-
 
 	let verified = false;
 
