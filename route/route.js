@@ -5,16 +5,8 @@ router.use("/estate", require("./estate"));
 router.use("/user", require("./user"));
 router.use("/province", require("./province"));
 router.use("/city", require("./city"));
-router.use("/like", require("./like"));
-router.use("/bookmark", require("./bookmark"));
-router.use("/comment", require("./comment"));
-router.use("/score", require("./score"));
 router.use("/message", require("./message"));
 router.use("/password", require("./password"));
-router.use("/sms", require("./sms"));
-router.use("/customer", require("./customer"));
-router.use("/request", require("./request"));
-router.use("/meeting", require("./meeting"));
 router.use("/info", require("./info"));
 
 module.exports = router;
