@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
 const error_operation = require("./util/error_operation");
 const PAGE = 1;
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 30;
 
 module.exports = class Context
 {
@@ -372,7 +372,7 @@ module.exports = class Context
 	//#endregion
 
 	//#region Estate
-	setEstateOptions()
+	setEstateOptions(current_user_id)
 	{
 		let options = {
 			where: {
@@ -435,6 +435,33 @@ module.exports = class Context
 				}
 			],
 		};
+		if (current_user_id)
+		{
+			// favorite
+			options.attributes.include.push([
+				Sequelize.literal(`EXISTS (
+						SELECT * FROM estate_favorite
+						WHERE estate_favorite.estate_id = estate.id
+						AND estate_favorite.user_id = ${current_user_id})`),
+				"has_favorite"
+			]);
+			// score
+			options.attributes.include.push([
+				Sequelize.literal(`(
+						SELECT score FROM estate_score
+						WHERE estate_score.estate_id = estate.id
+						AND estate_score.user_id = ${current_user_id})`),
+				"has_score"
+			]);
+			// bookmark
+			options.attributes.include.push([
+				Sequelize.literal(`EXISTS (
+						SELECT * FROM estate_bookmark
+						WHERE estate_bookmark.estate_id = estate.id
+						AND estate_bookmark.user_id = ${current_user_id})`),
+				"has_bookmark"
+			]);
+		}
 		return options;
 	}
 
@@ -455,17 +482,17 @@ module.exports = class Context
 		return where;
 	}
 
-	async getEstate(id, trx)
+	async getEstate(id, current_user_id, trx)
 	{
-		let options = this.setEstateOptions();
+		let options = this.setEstateOptions(current_user_id);
 		options.where.id = id;
 		let estate = await this.getModel("estate", options, trx);
 		return estate;
 	}
 
-	async getEstates(user_id, page, page_size, estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price, trx)
+	async getEstates(user_id, page, page_size, estate_type_id, sale_method, city_id, total_min_price, total_max_price, meter_min_price, meter_max_price, pawn_min_price, pawn_max_price, rent_min_price, rent_max_price, current_user_id, trx)
 	{
-		let options = this.setEstateOptions();
+		let options = this.setEstateOptions(current_user_id);
 		options.where = this.whereEstates(
 			estate_type_id,
 			sale_method,
@@ -493,9 +520,9 @@ module.exports = class Context
 		return this.database.models.estate_type.findAll({ transaction: trx });
 	}
 
-	async getRecentEstates(limit, trx)
+	async getRecentEstates(limit, current_user_id, trx)
 	{
-		let options = this.setEstateOptions();
+		let options = this.setEstateOptions(current_user_id);
 		options.limit = limit;
 		options.transaction = trx;
 		return await this.database.models.estate.findAll(options);
@@ -669,16 +696,6 @@ module.exports = class Context
 			transaction: trx
 		});
 	}
-
-	// async checkFavoriteEstate(estate_id, user_id, trx)
-	// {
-	// 	let estate_favorite = await this.database.models.estate_favorite.findOne({
-	// 		where: { user_id, estate_id },
-	//		transaction: trx
-	// 	});
-	// 	if (estate_favorite) return { favorite: true };
-	// 	return { favorite: false };
-	// }
 	//#endregion
 
 	//#region Message
