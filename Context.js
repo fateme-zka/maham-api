@@ -17,6 +17,8 @@ module.exports = class Context
 		const User = require("./model/User");
 		const UserRole = require("./model/UserRole");
 		const ContactUs = require("./model/ContactUs");
+		const Customer = require("./model/Customer");
+		const CustomerStage = require("./model/CustomerStage");
 		const Estate = require("./model/Estate");
 		const EstateBookmark = require("./model/EstateBookmark");
 		const EstateFavorite = require("./model/EstateFavorite");
@@ -31,6 +33,8 @@ module.exports = class Context
 		const user = User(this.database, Sequelize.DataTypes);
 		const user_role = UserRole(this.database, Sequelize.DataTypes);
 		const contact_us = ContactUs(this.database, Sequelize.DataTypes);
+		const customer = Customer(this.database, Sequelize.DataTypes);
+		const customer_stage = CustomerStage(this.database, Sequelize.DataTypes);
 		const estate = Estate(this.database, Sequelize.DataTypes);
 		const estate_bookmark = EstateBookmark(this.database, Sequelize.DataTypes);
 		const estate_favorite = EstateFavorite(this.database, Sequelize.DataTypes);
@@ -47,6 +51,13 @@ module.exports = class Context
 		});
 		contact_us.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: true },
+		});
+		customer.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		user.hasMany(customer);
+		customer.belongsTo(customer_stage, {
+			foreignKey: { name: "customer_stage_id", allowNull: false },
 		});
 		estate.hasMany(contact_us);
 		estate.belongsTo(estate_type, {
