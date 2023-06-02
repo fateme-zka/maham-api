@@ -11,7 +11,7 @@ Uncaught.start();
 Uncaught.addListener((err) =>
 {
 	Winston.error("Uncaught error.", err);
-	email_operation.sendExeption(err);
+	email_operation.sendException(err);
 });
 
 // Express

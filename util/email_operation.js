@@ -7,7 +7,7 @@ let maham_email_password = env_operation.getOrError('maham_email_password');
 let maham_email_error_title = env_operation.getOrError('maham_email_error_title');
 let maham_email_error_recipients = env_operation.getOrError('maham_email_error_recipients');
 
-function sendExeption(error, meta, callback)
+function sendException(error, meta, callback)
 {
     let title = error.message;
     let message = title;
@@ -82,7 +82,7 @@ function send(to, subject, text, html, callback) {
 }
 
 module.exports = {
-	sendExeption,
+	sendException,
     sendError,
     send,
 };
