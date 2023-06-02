@@ -53,4 +53,4 @@ const handler = async function (req, res)
 	);
 };
 
-module.exports = { handler, query_schema, auth: false };
+module.exports = { handler, query_schema };

@@ -8,4 +8,4 @@ const handler = async function (req, res)
 	return await req.context.getEstateTypes();
 };
 
-module.exports = { handler, query_schema, auth: false };
+module.exports = { handler, query_schema };

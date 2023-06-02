@@ -12,4 +12,4 @@ const handler = async function (req, res)
 	return await req.context.getFavoriteEstateCities(limit);
 };
 
-module.exports = { handler, query_schema, auth: false };
+module.exports = { handler, query_schema };

@@ -8,4 +8,4 @@ const handler = async function (req)
 	return await req.context.getCities(province_id);
 };
 
-module.exports = { handler, auth: false };
+module.exports = { handler };

@@ -52,4 +52,4 @@ const handler = async function (req)
 	return { token, user };
 };
 
-module.exports = { handler, body_schema, auth: false };
+module.exports = { handler, body_schema };

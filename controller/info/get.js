@@ -10,4 +10,4 @@ const handler = async function (req)
 	return { count_all_users, count_estates };
 };
 
-module.exports = { handler, auth: false };
+module.exports = { handler };
