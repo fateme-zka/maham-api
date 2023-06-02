@@ -26,6 +26,17 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// file upload middleware
+const fileUpload = require('express-fileupload');
+
+// static 
+app.use(Express.static('static'));
+
+
+
+// Use the express-fileupload middleware
+app.use(fileUpload());
+
 
 // Database
 const Context = require("./Context");
