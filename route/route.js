@@ -8,5 +8,6 @@ router.use("/city", require("./city"));
 router.use("/message", require("./message"));
 router.use("/password", require("./password"));
 router.use("/info", require("./info"));
+router.use("/field", require("./field"));
 
 module.exports = router;
