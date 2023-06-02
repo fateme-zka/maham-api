@@ -769,9 +769,14 @@ module.exports = class Context
 	//#endregion
 
 	//#region Customer
-	async getAllCustomerStages()
+	async getAllCustomerStages(trx)
 	{
-		return await this.database.models.customer_stage.findAll();
+		return await this.database.models.customer_stage.findAll({ transaction: trx });
+	}
+
+	async addCustomerStage(name, trx)
+	{
+		return await this.createModel("customer_stage", { name }, trx);
 	}
 	//#endregion
 
