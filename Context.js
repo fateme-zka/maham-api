@@ -778,6 +778,13 @@ module.exports = class Context
 	{
 		return await this.createModel("customer_stage", { name }, trx);
 	}
+
+	async addCustomer(user_id, customer_stage_id, name, family, phone_number, address, trx)
+	{
+		return await this.createModel("customer", {
+			user_id, customer_stage_id, name, family, phone_number, address
+		}, trx);
+	}
 	//#endregion
 
 };
