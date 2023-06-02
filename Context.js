@@ -785,6 +785,14 @@ module.exports = class Context
 			user_id, customer_stage_id, name, family, phone_number, address
 		}, trx);
 	}
+
+	async deleteCustomer(id, user_id, trx)
+	{
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id;
+		return await this.deleteModel("customer", { where }, trx);
+	}
 	//#endregion
 
 };
