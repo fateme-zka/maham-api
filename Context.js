@@ -793,6 +793,20 @@ module.exports = class Context
 			where.user_id = user_id;
 		return await this.deleteModel("customer", { where }, trx);
 	}
+
+	async updateCustomer(id, customer_stage_id, name, family, phone_number, address, user_id, trx)
+	{
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id
+		let customer = await this.getModel("customer", { where }, trx);
+		customer.customer_stage_id = customer_stage_id;
+		customer.name = name;
+		customer.family = family;
+		customer.phone_number = phone_number;
+		customer.address = address;
+		return await customer.save({ transaction: trx });
+	}
 	//#endregion
 
 };
