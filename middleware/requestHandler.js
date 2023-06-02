@@ -76,7 +76,7 @@ module.exports = (controller) => async (req, res) =>
 
 		// call controller
 		if (controller.handler) result = await controller.handler(req, res);
-		if (result == null) result = "Success";
+		if (result == null) result = {};
 	} catch (error)
 	{
 		if (error.code === undefined)
@@ -90,7 +90,7 @@ module.exports = (controller) => async (req, res) =>
 		if (error.code) result = meta.message;
 		else
 		{
-			result = "Sorry, internl server error.";
+			result = "Sorry, internal server error.";
 		}
 	}
 	meta.end_time = new Date();
