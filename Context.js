@@ -768,4 +768,11 @@ module.exports = class Context
 	}
 	//#endregion
 
+	//#region Customer
+	async getAllCustomerStages()
+	{
+		return await this.database.models.customer_stage.findAll();
+	}
+	//#endregion
+
 };
