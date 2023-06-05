@@ -10,6 +10,7 @@ router.use("/message", require("./message"));
 router.use("/password", require("./password"));
 router.use("/info", require("./info"));
 router.use("/field", require("./field"));
+router.use("/contact_us", require("./contact_us"));
 router.use("/customer", require("./customer"));
 
 module.exports = router;
