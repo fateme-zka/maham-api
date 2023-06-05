@@ -3,7 +3,6 @@ const Phone = require("phone");
 
 const body_schema = Joi.object({
 	estate_type_id: Joi.number().required(),
-	sale_method: Joi.string().required().valid("rent", "pawn", "sell"),
 	name: Joi.string().required(),
 	phone_number: Joi.string().required(),
 	email: Joi.string().allow(""),
@@ -58,6 +57,7 @@ const body_schema = Joi.object({
 	video_door_phone: Joi.boolean().allow(""),
 	pool: Joi.boolean().allow(""),
 	//sale
+	sale_method: Joi.string().required().valid("rent", "pawn", "sell"),
 	total_price: Joi.number().positive().allow(""),
 	meter_price: Joi.number().positive().allow(""),
 	pawn_price: Joi.number().positive().allow(""),
@@ -70,7 +70,6 @@ const handler = async function (req)
 {
 	let {
 		estate_type_id,
-		sale_method,
 		name,
 		phone_number,
 		email,
@@ -123,6 +122,7 @@ const handler = async function (req)
 		camera,
 		video_door_phone,
 		pool,
+		sale_method,
 		total_price,
 		meter_price,
 		pawn_price,

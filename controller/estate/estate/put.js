@@ -11,7 +11,7 @@ const body_schema = Joi.object({
 	area: Joi.string().allow(""),
 	address: Joi.string().required(),
 	description: Joi.string().allow(""),
-	land_size_meter: Joi.number().positive().allow(""),
+	land_size_meter: Joi.number().positive().required(),
 	building_size_meter: Joi.number().positive().allow(""),
 	loan: Joi.boolean().allow(""),
 	sold: Joi.boolean().required(),

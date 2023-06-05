@@ -1,7 +1,6 @@
 const Joi = require("joi");
 
-const query_schema = Joi.object({
-});
+const query_schema = Joi.object({});
 
 const handler = async function (req, res)
 {
