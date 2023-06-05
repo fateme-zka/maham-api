@@ -1,0 +1,38 @@
+{
+	"rent": {
+		"fields": [
+			[
+				"pawn_price",
+				"number"
+			],
+			[
+				"rent_price",
+				"number"
+			]
+		]
+	},
+	"pawn": {
+		"fields": [
+			[
+				"pawn_price",
+				"number"
+			],
+			[
+				"total_price",
+				"number"
+			]
+		]
+	},
+	"sell": {
+		"fields": [
+			[
+				"total_price",
+				"number"
+			],
+			[
+				"meter_price",
+				"number"
+			]
+		]
+	}
+}
