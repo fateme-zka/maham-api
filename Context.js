@@ -840,6 +840,17 @@ module.exports = class Context
 	}
 
 	// customer followup
+	async getAllCustomerFollowups(user_id, customer_id, trx)
+	{
+		// todo check current time and date for expired followups
+		let where = {};
+		if (user_id)
+			where.responsible_user_id = user_id;
+		if (customer_id)
+			where.customer_id = customer_id;
+		return await this.database.models.customer_followup.findAll({ where, transaction: trx });
+	}
+
 	async addCustomerFollowup(user_id, customer_id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description, trx)
 	{
 		return await this.createModel("customer_followup", {
