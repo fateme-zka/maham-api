@@ -2,31 +2,32 @@ const Joi = require("joi");
 const Phone = require("phone");
 
 const body_schema = Joi.object({
-	customer_stage_id: Joi.number().required(),
-	name: Joi.string().required(),
-	family: Joi.string().required(),
-	phone_number: Joi.string().max(13).required(),
-	address: Joi.string().required(),
+	customer_stage_id: Joi.number().required(), // todo check
+	responsible_user_id: Joi.number().required(),
+	time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required()
+		.messages({
+			"string.pattern.base": "Please enter correct time."
+		}),
+	date: Joi.date().required(),
+	reminder_time: Joi.string().regex(/^([0-9]{2})\:([0-9]{2})$/).required()
+		.messages({
+			"string.pattern.base": "Please enter correct time."
+		}),
+	reminder_date: Joi.date().required(),
+	description: Joi.string().required(),
 });
 
 const handler = async function (req)
 {
+	let { customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description } = req.body;
 	let { id } = req.params;
-	let { customer_stage_id, name, family, phone_number, address } = req.body;
-
 	let user_id = req.user.id;
 
-	if (req.user.admin)
-		user_id = null;
+	let customer_followup = await req.context.getCustomerFollowup(id);
+	if (!req.user.admin && customer_followup.responsible_user_id != user_id)
+		req.throw(403, "You have no access for editing!");
 
-	// check phone_number
-	if (!Phone.phone(phone_number).isValid)
-		req.throw(400, "Invalid phone number.");
-	let customer = await req.context.database.models.customer.findOne({ where: { phone_number } });
-	if (customer && customer.id != id)
-		req.throw(400, "This phone number already exists.");
-
-	return await req.context.updateCustomer(id, customer_stage_id, name, family, phone_number, address, user_id);
+	return await req.context.updateCustomerFollowup(id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description);
 };
 
 module.exports = { handler, body_schema, auth: true, auth_consultant: true };

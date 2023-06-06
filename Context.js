@@ -854,6 +854,24 @@ module.exports = class Context
 			description
 		}, trx);
 	}
+
+	async getCustomerFollowup(id, trx)
+	{
+		return await this.getModel("customer_followup", { where: { id } }, trx);
+	}
+
+	async updateCustomerFollowup(id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description, trx)
+	{
+		let customer_followup = await this.getCustomerFollowup(id, trx);
+		customer_followup.customer_stage_id = customer_stage_id;
+		customer_followup.responsible_user_id = responsible_user_id;
+		customer_followup.time = time;
+		customer_followup.date = date;
+		customer_followup.reminder_time = reminder_time;
+		customer_followup.reminder_date = reminder_date;
+		customer_followup.description = description;
+		return await customer_followup.save({ transaction: trx });
+	}
 	//#endregion
 
 };
