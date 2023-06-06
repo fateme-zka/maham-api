@@ -872,6 +872,11 @@ module.exports = class Context
 		customer_followup.description = description;
 		return await customer_followup.save({ transaction: trx });
 	}
+
+	async deleteCustomerFollowup(id, trx)
+	{
+		return await this.deleteModel("customer_followup", { where: { id } }, trx);
+	}
 	//#endregion
 
 };
