@@ -19,6 +19,7 @@ module.exports = class Context
 		const ContactUs = require("./model/ContactUs");
 		const Customer = require("./model/Customer");
 		const CustomerStage = require("./model/CustomerStage");
+		const CustomerFollowup = require("./model/CustomerFollowup");
 		const Estate = require("./model/Estate");
 		const EstateBookmark = require("./model/EstateBookmark");
 		const EstateFavorite = require("./model/EstateFavorite");
@@ -35,6 +36,7 @@ module.exports = class Context
 		const contact_us = ContactUs(this.database, Sequelize.DataTypes);
 		const customer = Customer(this.database, Sequelize.DataTypes);
 		const customer_stage = CustomerStage(this.database, Sequelize.DataTypes);
+		const customer_followup = CustomerFollowup(this.database, Sequelize.DataTypes);
 		const estate = Estate(this.database, Sequelize.DataTypes);
 		const estate_bookmark = EstateBookmark(this.database, Sequelize.DataTypes);
 		const estate_favorite = EstateFavorite(this.database, Sequelize.DataTypes);
@@ -58,6 +60,19 @@ module.exports = class Context
 		user.hasMany(customer);
 		customer.belongsTo(customer_stage, {
 			foreignKey: { name: "customer_stage_id", allowNull: false },
+		});
+		customer_followup.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		customer_followup.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
+		customer.hasMany(customer_followup);
+		customer_followup.belongsTo(customer_stage, {
+			foreignKey: { name: "customer_stage_id", allowNull: false },
+		});
+		customer_followup.belongsTo(user, {
+			foreignKey: { name: "responsible_user_id", allowNull: false },
 		});
 		estate.hasMany(contact_us);
 		estate.belongsTo(estate_type, {
@@ -822,6 +837,12 @@ module.exports = class Context
 		customer.phone_number = phone_number;
 		customer.address = address;
 		return await customer.save({ transaction: trx });
+	}
+
+	// followup
+	async addCustomerFollowup(trx)
+	{
+
 	}
 	//#endregion
 
