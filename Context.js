@@ -839,10 +839,20 @@ module.exports = class Context
 		return await customer.save({ transaction: trx });
 	}
 
-	// followup
-	async addCustomerFollowup(trx)
+	// customer followup
+	async addCustomerFollowup(user_id, customer_id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description, trx)
 	{
-
+		return await this.createModel("customer_followup", {
+			user_id,
+			customer_id,
+			customer_stage_id,
+			responsible_user_id,
+			time,
+			date,
+			reminder_time,
+			reminder_date,
+			description
+		}, trx);
 	}
 	//#endregion
 
