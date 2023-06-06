@@ -774,6 +774,17 @@ module.exports = class Context
 		return await this.database.models.customer_stage.findAll({ transaction: trx });
 	}
 
+	async getAllCustomers(user_id, trx)
+	{
+		let where = {};
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.customer.findAll({
+			where,
+			transaction: trx
+		});
+	}
+
 	async addCustomerStage(name, trx)
 	{
 		return await this.createModel("customer_stage", { name }, trx);
