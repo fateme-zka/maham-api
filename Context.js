@@ -23,6 +23,7 @@ module.exports = class Context
 		const Estate = require("./model/Estate");
 		const EstateBookmark = require("./model/EstateBookmark");
 		const EstateFavorite = require("./model/EstateFavorite");
+		const EstateFollowup = require("./model/EstateFollowup");
 		const EstateImage = require("./model/EstateImage");
 		const EstateScore = require("./model/EstateScore");
 		const EstateType = require("./model/EstateType");
@@ -40,6 +41,7 @@ module.exports = class Context
 		const estate = Estate(this.database, Sequelize.DataTypes);
 		const estate_bookmark = EstateBookmark(this.database, Sequelize.DataTypes);
 		const estate_favorite = EstateFavorite(this.database, Sequelize.DataTypes);
+		const estate_followup = EstateFollowup(this.database, Sequelize.DataTypes);
 		const estate_image = EstateImage(this.database, Sequelize.DataTypes);
 		const estate_score = EstateScore(this.database, Sequelize.DataTypes);
 		const estate_type = EstateType(this.database, Sequelize.DataTypes);
@@ -108,6 +110,15 @@ module.exports = class Context
 			foreignKey: { name: "user_id", allowNull: false },
 		});
 		user.hasMany(estate_favorite);
+		estate_followup.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		estate_followup.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		estate_followup.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
 		estate_image.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: false },
 		});
