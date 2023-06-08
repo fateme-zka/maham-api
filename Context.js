@@ -688,6 +688,54 @@ module.exports = class Context
 	{
 		return await this.deleteModel("estate", { where: { id } }, trx);
 	}
+
+	// estate followup
+	async getAllEstateFollowups(user_id, trx)
+	{
+		// todo check current time and date for expired followups
+		let where = {};
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.estate_followup.findAll({ where, transaction: trx });
+	}
+
+	async getEstateFollowup(id, trx)
+	{
+		// todo check current time and date for expired followups
+		return await this.getModel("estate_followup", { where: { id } }, trx);
+	}
+
+	async addEstateFollowup(user_id, estate_id, customer_id, time, date, reminder_time, reminder_date, description, trx)
+	{
+		return await this.createModel("estate_followup", {
+			user_id,
+			estate_id,
+			customer_id,
+			time,
+			date,
+			reminder_time,
+			reminder_date,
+			description,
+		}, trx);
+	}
+
+	async updateEstateFollowup(id, estate_id, customer_id, time, date, reminder_time, reminder_date, description, trx)
+	{
+		let estate_followup = await this.getEstateFollowup(id);
+		estate_followup.estate_id = estate_id;
+		estate_followup.customer_id = customer_id;
+		estate_followup.time = time;
+		estate_followup.date = date;
+		estate_followup.reminder_time = reminder_time;
+		estate_followup.reminder_date = reminder_date;
+		estate_followup.description = description;
+		return await estate_followup.save({ transaction: trx });
+	}
+
+	async deleteEstateFollowup(id, trx)
+	{
+		return await this.deleteModel("estate_followup", { where: { id } }, trx);
+	}
 	//#endregion
 
 	//#region Estate Reaction
