@@ -31,6 +31,7 @@ module.exports = class Context
 		const Message = require("./model/Message");
 		const City = require("./model/City");
 		const Province = require("./model/Province");
+		const Setting = require("./model/Setting");
 		const SupportRequest = require("./model/SupportRequest");
 
 		// Tables
@@ -51,6 +52,7 @@ module.exports = class Context
 		const message = Message(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
+		const setting = Setting(this.database, Sequelize.DataTypes);
 		const support_request = SupportRequest(this.database, Sequelize.DataTypes);
 
 		// ForeignKeys
@@ -145,6 +147,9 @@ module.exports = class Context
 			foreignKey: { name: "receiver_id", allowNull: false },
 		});
 		user.hasMany(message);
+		setting.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
 		support_request.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
@@ -958,7 +963,6 @@ module.exports = class Context
 		return await this.deleteModel("customer_followup", { where: { id } }, trx);
 	}
 	//#endregion
-
 
 	//#region Request
 	async getAllSupportRequests()
