@@ -16,6 +16,7 @@ module.exports = class Context
 		// Models
 		const User = require("./model/User");
 		const UserRole = require("./model/UserRole");
+		const AdvertisingRequest= require("./model/AdvertisingRequest");
 		const ContactUs = require("./model/ContactUs");
 		const Customer = require("./model/Customer");
 		const CustomerStage = require("./model/CustomerStage");
@@ -30,10 +31,12 @@ module.exports = class Context
 		const Message = require("./model/Message");
 		const City = require("./model/City");
 		const Province = require("./model/Province");
+		const SupportRequest = require("./model/SupportRequest");
 
 		// Tables
 		const user = User(this.database, Sequelize.DataTypes);
 		const user_role = UserRole(this.database, Sequelize.DataTypes);
+		const advertising_request = AdvertisingRequest(this.database, Sequelize.DataTypes);
 		const contact_us = ContactUs(this.database, Sequelize.DataTypes);
 		const customer = Customer(this.database, Sequelize.DataTypes);
 		const customer_stage = CustomerStage(this.database, Sequelize.DataTypes);
@@ -48,10 +51,14 @@ module.exports = class Context
 		const message = Message(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
+		const support_request= SupportRequest(this.database, Sequelize.DataTypes);
 
 		// ForeignKeys
 		user.belongsTo(user_role, {
 			foreignKey: { name: "user_role_id", allowNull: false },
+		});
+		advertising_request.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
 		});
 		contact_us.belongsTo(estate, {
 			foreignKey: { name: "estate_id", allowNull: true },
@@ -138,6 +145,9 @@ module.exports = class Context
 			foreignKey: { name: "receiver_id", allowNull: false },
 		});
 		user.hasMany(message);
+		support_request.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
 
 		this.database.sync({ force: false });
 	}
