@@ -16,7 +16,7 @@ module.exports = class Context
 		// Models
 		const User = require("./model/User");
 		const UserRole = require("./model/UserRole");
-		const AdvertisingRequest= require("./model/AdvertisingRequest");
+		const AdvertisingRequest = require("./model/AdvertisingRequest");
 		const ContactUs = require("./model/ContactUs");
 		const Customer = require("./model/Customer");
 		const CustomerStage = require("./model/CustomerStage");
@@ -51,7 +51,7 @@ module.exports = class Context
 		const message = Message(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
-		const support_request= SupportRequest(this.database, Sequelize.DataTypes);
+		const support_request = SupportRequest(this.database, Sequelize.DataTypes);
 
 		// ForeignKeys
 		user.belongsTo(user_role, {
@@ -956,6 +956,31 @@ module.exports = class Context
 	async deleteCustomerFollowup(id, trx)
 	{
 		return await this.deleteModel("customer_followup", { where: { id } }, trx);
+	}
+	//#endregion
+
+
+	//#region Request
+	async getAllSupportRequests()
+	{
+		return await this.database.models.support_request.findAll({});
+	}
+
+	async addSupportRequest(user_id, name, phone_number, call_number, title, description, trx)
+	{
+		let values = { user_id, name, phone_number, call_number, title, description };
+		return await this.createModel("support_request", values, trx);
+	}
+
+	async getAllAdvertisingRequests()
+	{
+		return await this.database.models.advertising_request.findAll({});
+	}
+
+	async addAdvertisingRequest(user_id, name, phone_number, call_number, ad_type, description, trx)
+	{
+		let values = { user_id, name, phone_number, call_number, ad_type, description };
+		return await this.createModel("advertising_request", values, trx);
 	}
 	//#endregion
 

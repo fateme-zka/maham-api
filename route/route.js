@@ -1,7 +1,9 @@
 const router = require("express").Router({ mergeParams: true });
 
 router.use("/upload", require("./upload"));
-router.use("/admin", require("./admin"));
+router.use("/admin/user", require("./admin/user"));
+router.use("/admin/estate", require("./admin/estate"));
+router.use("/admin/request", require("./admin/request"));
 router.use("/estate", require("./estate/estate"));
 router.use("/estate/followup", require("./estate/followup"));
 router.use("/user", require("./user"));
