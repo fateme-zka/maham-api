@@ -1010,5 +1010,17 @@ module.exports = class Context
 		await meta_tags.save({ transaction: trx });
 		return { logo_url, meta_tags };
 	}
+
+	async updateContactSetting(call_number, phone_number, email, address, trx)
+	{
+		let contact = await this.database.models.setting.findOne({ where: { key: "contact" } });
+		contact.value = {
+			call_number,
+			phone_number,
+			email,
+			address
+		};
+		return await contact.save({ transaction: trx });
+	}
 	//#endregion
 };
