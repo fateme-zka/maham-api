@@ -147,9 +147,6 @@ module.exports = class Context
 			foreignKey: { name: "receiver_id", allowNull: false },
 		});
 		user.hasMany(message);
-		setting.belongsTo(user, {
-			foreignKey: { name: "user_id", allowNull: false },
-		});
 		support_request.belongsTo(user, {
 			foreignKey: { name: "user_id", allowNull: false },
 		});
@@ -988,4 +985,30 @@ module.exports = class Context
 	}
 	//#endregion
 
+	//#region Setting
+	async getAllSettings()
+	{
+		let settings = await this.database.models.setting.findAll();
+		settings.forEach(setting =>
+		{
+			setting.value = JSON.parse(setting.value);
+		});
+		return settings;
+	}
+
+	async updateMetaTagsAndLogoSettings(logo_url, keywords, title_meta_tags, description_meta_tags, trx)
+	{
+		let logo = await this.database.models.setting.findOne({ where: { key: "logo" } });
+		logo.value = logo_url;
+		await logo.save({ transaction: trx });
+		let meta_tags = await this.database.models.setting.findOne({ where: { key: "meta_tags" } });
+		meta_tags.value = {
+			keywords,
+			title: title_meta_tags,
+			description: description_meta_tags
+		};
+		await meta_tags.save({ transaction: trx });
+		return { logo_url, meta_tags };
+	}
+	//#endregion
 };

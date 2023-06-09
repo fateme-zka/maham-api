@@ -4,6 +4,7 @@ router.use("/upload", require("./upload"));
 router.use("/admin/user", require("./admin/user"));
 router.use("/admin/estate", require("./admin/estate"));
 router.use("/admin/request", require("./admin/request"));
+router.use("/admin/setting", require("./admin/setting"));
 router.use("/estate", require("./estate/estate"));
 router.use("/estate/followup", require("./estate/followup"));
 router.use("/user", require("./user"));
