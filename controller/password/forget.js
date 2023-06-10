@@ -39,10 +39,10 @@ const handler = async (req) =>
 		// Send 
 		let change_password_link = process.env.FRONT_BASE_URL + `/change_password?user_id=${user.id}&otp=${user.f_otp}`;
 		let text = `برای تغییر رمز عبور حساب کاربری مهام املاک خود لطفا وارد لینک زیر شوید: \n${change_password_link} \nمهام املاک`;
-		await sms_operation.sendText(phone_number, text);
+		await sms_operation.sendText(phone_number, text, req.context);
 	});
 
-	return { response, phone_number, code: user.f_otp };
+	return { response };
 };
 
 module.exports = { handler, body_schema };

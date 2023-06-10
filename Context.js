@@ -998,10 +998,10 @@ module.exports = class Context
 
 	async updateMetaTagsAndLogoSettings(logo_url, keywords, title_meta_tags, description_meta_tags, trx)
 	{
-		let logo = await this.database.models.setting.findOne({ where: { key: "logo" } });
+		let logo = await this.database.models.setting.findOne({ where: { key: "logo" }, transaction: trx });
 		logo.value = logo_url;
 		await logo.save({ transaction: trx });
-		let meta_tags = await this.database.models.setting.findOne({ where: { key: "meta_tags" } });
+		let meta_tags = await this.database.models.setting.findOne({ where: { key: "meta_tags" }, transaction: trx });
 		meta_tags.value = {
 			keywords,
 			title: title_meta_tags,
@@ -1013,7 +1013,7 @@ module.exports = class Context
 
 	async updateContactSetting(call_number, phone_number, email, address, trx)
 	{
-		let contact = await this.database.models.setting.findOne({ where: { key: "contact" } });
+		let contact = await this.database.models.setting.findOne({ where: { key: "contact" }, transaction: trx });
 		contact.value = {
 			call_number,
 			phone_number,
@@ -1026,7 +1026,7 @@ module.exports = class Context
 	async updateSiteSetting(main_page_first_title, main_page_second_title, main_page_description, services, why_choose_us, performances, about_us, trx)
 	{
 
-		let site = await this.database.models.setting.findOne({ where: { key: "site" } });
+		let site = await this.database.models.setting.findOne({ where: { key: "site" }, transaction: trx });
 		site.value = {
 			main_page: {
 				first_title: main_page_first_title,
@@ -1042,9 +1042,15 @@ module.exports = class Context
 	}
 
 	// sms
+	async getSmsSetting(trx)
+	{
+		let { value } = await this.database.models.setting.findOne({ where: { key: "sms" }, transaction: trx });
+		return JSON.parse(value);
+	}
+
 	async updateSmsSetting(username, password, number, trx)
 	{
-		let sms = await this.database.models.setting.findOne({ where: { key: "sms" } });
+		let sms = await this.database.models.setting.findOne({ where: { key: "sms" }, transaction: trx });
 		sms.value = {
 			username,
 			password,
