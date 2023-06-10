@@ -1022,5 +1022,23 @@ module.exports = class Context
 		};
 		return await contact.save({ transaction: trx });
 	}
+
+	async updateSiteSetting(main_page_first_title, main_page_second_title, main_page_description, services, why_choose_us, performances, about_us, trx)
+	{
+
+		let site = await this.database.models.setting.findOne({ where: { key: "site" } });
+		site.value = {
+			main_page: {
+				first_title: main_page_first_title,
+				second_title: main_page_second_title,
+				description: main_page_description
+			},
+			services,
+			why_choose_us,
+			performances,
+			about_us
+		};
+		return await site.save({ transaction: trx });
+	}
 	//#endregion
 };
