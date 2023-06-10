@@ -1040,5 +1040,17 @@ module.exports = class Context
 		};
 		return await site.save({ transaction: trx });
 	}
+
+	// sms
+	async updateSmsSetting(username, password, number, trx)
+	{
+		let sms = await this.database.models.setting.findOne({ where: { key: "sms" } });
+		sms.value = {
+			username,
+			password,
+			number
+		};
+		return await sms.save({ transaction: trx });
+	}
 	//#endregion
 };
