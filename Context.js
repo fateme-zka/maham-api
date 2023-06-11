@@ -1108,23 +1108,17 @@ module.exports = class Context
 		return await this.deleteModel("meeting", { where }, trx);
 	}
 
-	async updateMeeting(id, title, description, address, time, date, send_sms)
+	async updateMeeting(id, title, address, description, time, date, send_sms, trx)
 	{
-		let meeting = await this.getModel("meeting", { where: { id } });
-		if (title)
-			meeting.title = title;
-		if (description)
-			meeting.description = description;
-		if (address)
-			meeting.address = address;
-		if (time)
-			meeting.time = time;
-		if (date)
-			meeting.date = date;
-		if (send_sms == true || send_sms == false)
-			meeting.send_sms = send_sms;
+		let meeting = await this.getModel("meeting", { where: { id } }, trx);
+		meeting.title = title;
+		meeting.address = address;
+		meeting.description = description;
+		meeting.time = time;
+		meeting.date = date;
+		meeting.send_sms = send_sms;
 
-		return await meeting.save();
+		return await meeting.save({ transaction: trx });
 	}
 	//#endregion
 };
