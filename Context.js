@@ -28,6 +28,7 @@ module.exports = class Context
 		const EstateImage = require("./model/EstateImage");
 		const EstateScore = require("./model/EstateScore");
 		const EstateType = require("./model/EstateType");
+		const Meeting = require("./model/Meeting");
 		const Message = require("./model/Message");
 		const City = require("./model/City");
 		const Province = require("./model/Province");
@@ -49,6 +50,7 @@ module.exports = class Context
 		const estate_image = EstateImage(this.database, Sequelize.DataTypes);
 		const estate_score = EstateScore(this.database, Sequelize.DataTypes);
 		const estate_type = EstateType(this.database, Sequelize.DataTypes);
+		const meeting = Meeting(this.database, Sequelize.DataTypes);
 		const message = Message(this.database, Sequelize.DataTypes);
 		const city = City(this.database, Sequelize.DataTypes);
 		const province = Province(this.database, Sequelize.DataTypes);
@@ -140,6 +142,15 @@ module.exports = class Context
 			foreignKey: { name: "user_id", allowNull: false },
 		});
 		user.hasMany(estate_score);
+		meeting.belongsTo(user, {
+			foreignKey: { name: "user_id", allowNull: false },
+		});
+		meeting.belongsTo(estate, {
+			foreignKey: { name: "estate_id", allowNull: false },
+		});
+		meeting.belongsTo(customer, {
+			foreignKey: { name: "customer_id", allowNull: false },
+		});
 		message.belongsTo(user, {
 			foreignKey: { name: "sender_id", allowNull: false },
 		});
@@ -1057,6 +1068,46 @@ module.exports = class Context
 			number
 		};
 		return await sms.save({ transaction: trx });
+	}
+	//#endregion
+
+	//#region Meeting
+	async getMeetings(user_id)
+	{
+		let user = await this.getUser("id", user_id);
+		if (!user.admin)
+			return await this.database.models.meeting.findAll({ where: { user_id } });
+		return await this.database.models.meeting.findAll();
+	}
+
+	async addMeeting(user_id, estate_id, customer_id, title, description, address, time, date, send_sms)
+	{
+		let values = { user_id, estate_id, customer_id, title, description, address, time, date, send_sms }
+		return await this.createModel("meeting", values);
+	}
+
+	async deleteMeeting(id)
+	{
+		return await this.deleteModel("meeting", { where: { id } });
+	}
+
+	async updateMeeting(id, title, description, address, time, date, send_sms)
+	{
+		let meeting = await this.getModel("meeting", { where: { id } });
+		if (title)
+			meeting.title = title;
+		if (description)
+			meeting.description = description;
+		if (address)
+			meeting.address = address;
+		if (time)
+			meeting.time = time;
+		if (date)
+			meeting.date = date;
+		if (send_sms == true || send_sms == false)
+			meeting.send_sms = send_sms;
+
+		return await meeting.save();
 	}
 	//#endregion
 };
