@@ -1072,17 +1072,20 @@ module.exports = class Context
 	//#endregion
 
 	//#region Meeting
-	async getMeetings(user_id)
+	async getAllMeetings(user_id, trx)
 	{
-		let user = await this.getUser("id", user_id);
-		if (!user.admin)
-			return await this.database.models.meeting.findAll({ where: { user_id } });
-		return await this.database.models.meeting.findAll();
+		let where = {};
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.meeting.findAll({
+			where,
+			transaction: trx
+		});
 	}
 
-	async addMeeting(user_id, estate_id, customer_id, title, description, address, time, date, send_sms)
+	async addMeeting(user_id, estate_id, customer_id, title, address, description, time, date, send_sms, trx)
 	{
-		let values = { user_id, estate_id, customer_id, title, description, address, time, date, send_sms }
+		let values = { user_id, estate_id, customer_id, title, address, description, time, date, send_sms }
 		return await this.createModel("meeting", values);
 	}
 
