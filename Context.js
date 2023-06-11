@@ -1089,9 +1089,12 @@ module.exports = class Context
 		return await this.createModel("meeting", values);
 	}
 
-	async deleteMeeting(id)
+	async deleteMeeting(id, user_id, trx)
 	{
-		return await this.deleteModel("meeting", { where: { id } });
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id;
+		return await this.deleteModel("meeting", { where }, trx);
 	}
 
 	async updateMeeting(id, title, description, address, time, date, send_sms)
