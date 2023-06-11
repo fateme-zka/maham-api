@@ -52,3 +52,6 @@ app.listen(port, () =>
 {
 	Winston.info(`Server listening on port ${port}`);
 });
+
+// start cron jobs
+require('./cron/reminder_sms').start(context);
