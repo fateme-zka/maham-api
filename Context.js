@@ -1083,6 +1083,17 @@ module.exports = class Context
 		});
 	}
 
+	async getMeeting(id, user_id, trx)
+	{
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.meeting.findOne({
+			where,
+			transaction: trx
+		});
+	}
+
 	async addMeeting(user_id, estate_id, customer_id, title, address, description, time, date, send_sms, trx)
 	{
 		let values = { user_id, estate_id, customer_id, title, address, description, time, date, send_sms }
