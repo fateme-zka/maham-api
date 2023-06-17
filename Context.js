@@ -715,8 +715,9 @@ module.exports = class Context
 	// estate followup
 	async getAllEstateFollowups(user_id, trx)
 	{
-		// todo check current time and date for expired followups
-		let where = {};
+		// check current time and date for expired followups
+		let current_date = new Date();
+		let where = { date: { [Op.gte]: current_date } };
 		if (user_id)
 			where.user_id = user_id;
 		return await this.database.models.estate_followup.findAll({ where, transaction: trx });
@@ -724,16 +725,13 @@ module.exports = class Context
 
 	async getEstateFollowup(id, trx)
 	{
-		// todo check current time and date for expired followups
+		// check current time and date for expired followups
 		let current_date = new Date();
 		return await this.getModel("estate_followup", {
 			where: {
 				id,
-			},
-			attributes: [Sequelize.literal(
-				''
-			), 'full_date'
-			],
+				date: { [Op.gte]: current_date },
+			}
 		}, trx);
 	}
 
@@ -930,7 +928,8 @@ module.exports = class Context
 	async getAllCustomerFollowups(user_id, customer_id, trx)
 	{
 		// todo check current time and date for expired followups
-		let where = {};
+		let current_date = new Date();
+		let where = { date: { [Op.gte]: current_date } };
 		if (user_id)
 			where.responsible_user_id = user_id;
 		if (customer_id)
@@ -953,7 +952,10 @@ module.exports = class Context
 
 	async getCustomerFollowup(id, trx)
 	{
-		return await this.getModel("customer_followup", { where: { id } }, trx);
+		// check current time and date for expired followups
+		let current_date = new Date();
+		let where = { id, date: { [Op.gte]: current_date } };
+		return await this.getModel("customer_followup", { where }, trx);
 	}
 
 	async updateCustomerFollowup(id, customer_stage_id, responsible_user_id, date, reminder_date, description, trx)
@@ -1075,7 +1077,9 @@ module.exports = class Context
 	//#region Meeting
 	async getAllMeetings(user_id, trx)
 	{
-		let where = {};
+		// check current time and date for expired meetings
+		let current_date = new Date();
+		let where = { date: { [Op.gte]: current_date } };
 		if (user_id)
 			where.user_id = user_id;
 		return await this.database.models.meeting.findAll({
@@ -1086,7 +1090,9 @@ module.exports = class Context
 
 	async getMeeting(id, user_id, trx)
 	{
-		let where = { id };
+		// check current time and date for expired meetings
+		let current_date = new Date();
+		let where = { id, date: { [Op.gte]: current_date } };
 		if (user_id)
 			where.user_id = user_id;
 		return await this.database.models.meeting.findOne({
