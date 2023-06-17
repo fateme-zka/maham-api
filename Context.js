@@ -1088,6 +1088,20 @@ module.exports = class Context
 		});
 	}
 
+	async getUpcomingMeetingsToRemind(trx)
+	{
+		// check current time and date for expired meetings
+		let current_date = new Date();
+		let where = {
+			date: { [Op.gte]: current_date }, // todo get meetings which will start one hour later
+			send_sms: true
+		};
+		return await this.database.models.meeting.findAll({
+			where,
+			transaction: trx
+		});
+	}
+
 	async getMeeting(id, user_id, trx)
 	{
 		// check current time and date for expired meetings
