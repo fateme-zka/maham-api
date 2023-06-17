@@ -4,7 +4,7 @@ const email_operation = require("../util/email_operation");
 
 async function start(context)
 {
-	cron.schedule('14 0 * * *', async () => // todo Amir set time
+	cron.schedule('14 0 * * *', async () =>
 	{
 		Winston.info("Cron was started for Reminder SMS");
 		try

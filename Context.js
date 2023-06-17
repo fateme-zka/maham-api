@@ -725,31 +725,36 @@ module.exports = class Context
 	async getEstateFollowup(id, trx)
 	{
 		// todo check current time and date for expired followups
-		return await this.getModel("estate_followup", { where: { id } }, trx);
+		let current_date = new Date();
+		return await this.getModel("estate_followup", {
+			where: {
+				id,
+			},
+			attributes: [Sequelize.literal(
+				''
+			), 'full_date'
+			],
+		}, trx);
 	}
 
-	async addEstateFollowup(user_id, estate_id, customer_id, time, date, reminder_time, reminder_date, description, trx)
+	async addEstateFollowup(user_id, estate_id, customer_id, date, reminder_date, description, trx)
 	{
 		return await this.createModel("estate_followup", {
 			user_id,
 			estate_id,
 			customer_id,
-			time,
 			date,
-			reminder_time,
 			reminder_date,
 			description,
 		}, trx);
 	}
 
-	async updateEstateFollowup(id, estate_id, customer_id, time, date, reminder_time, reminder_date, description, trx)
+	async updateEstateFollowup(id, estate_id, customer_id, date, reminder_date, description, trx)
 	{
 		let estate_followup = await this.getEstateFollowup(id);
 		estate_followup.estate_id = estate_id;
 		estate_followup.customer_id = customer_id;
-		estate_followup.time = time;
 		estate_followup.date = date;
-		estate_followup.reminder_time = reminder_time;
 		estate_followup.reminder_date = reminder_date;
 		estate_followup.description = description;
 		return await estate_followup.save({ transaction: trx });
@@ -933,16 +938,14 @@ module.exports = class Context
 		return await this.database.models.customer_followup.findAll({ where, transaction: trx });
 	}
 
-	async addCustomerFollowup(user_id, customer_id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description, trx)
+	async addCustomerFollowup(user_id, customer_id, customer_stage_id, responsible_user_id, date, reminder_date, description, trx)
 	{
 		return await this.createModel("customer_followup", {
 			user_id,
 			customer_id,
 			customer_stage_id,
 			responsible_user_id,
-			time,
 			date,
-			reminder_time,
 			reminder_date,
 			description
 		}, trx);
@@ -953,14 +956,12 @@ module.exports = class Context
 		return await this.getModel("customer_followup", { where: { id } }, trx);
 	}
 
-	async updateCustomerFollowup(id, customer_stage_id, responsible_user_id, time, date, reminder_time, reminder_date, description, trx)
+	async updateCustomerFollowup(id, customer_stage_id, responsible_user_id, date, reminder_date, description, trx)
 	{
 		let customer_followup = await this.getCustomerFollowup(id, trx);
 		customer_followup.customer_stage_id = customer_stage_id;
 		customer_followup.responsible_user_id = responsible_user_id;
-		customer_followup.time = time;
 		customer_followup.date = date;
-		customer_followup.reminder_time = reminder_time;
 		customer_followup.reminder_date = reminder_date;
 		customer_followup.description = description;
 		return await customer_followup.save({ transaction: trx });
@@ -1094,9 +1095,9 @@ module.exports = class Context
 		});
 	}
 
-	async addMeeting(user_id, estate_id, customer_id, title, address, description, time, date, send_sms, trx)
+	async addMeeting(user_id, estate_id, customer_id, title, address, description, date, send_sms, trx)
 	{
-		let values = { user_id, estate_id, customer_id, title, address, description, time, date, send_sms }
+		let values = { user_id, estate_id, customer_id, title, address, description, date, send_sms }
 		return await this.createModel("meeting", values);
 	}
 
@@ -1108,13 +1109,12 @@ module.exports = class Context
 		return await this.deleteModel("meeting", { where }, trx);
 	}
 
-	async updateMeeting(id, title, address, description, time, date, send_sms, trx)
+	async updateMeeting(id, title, address, description, date, send_sms, trx)
 	{
 		let meeting = await this.getModel("meeting", { where: { id } }, trx);
 		meeting.title = title;
 		meeting.address = address;
 		meeting.description = description;
-		meeting.time = time;
 		meeting.date = date;
 		meeting.send_sms = send_sms;
 

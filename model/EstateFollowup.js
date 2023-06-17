@@ -7,9 +7,7 @@ module.exports = (sequelize, DataTypes) =>
 		user_id: { type: DataTypes.INTEGER, allowNull: false },
 		estate_id: { type: DataTypes.INTEGER, allowNull: false },
 		customer_id: { type: DataTypes.INTEGER, allowNull: false },
-		time: { type: DataTypes.TIME, allowNull: false },
 		date: { type: DataTypes.DATE, allowNull: false },
-		reminder_time: { type: DataTypes.TIME, allowNull: false },
 		reminder_date: { type: DataTypes.DATE, allowNull: false },
 		description: { type: DataTypes.STRING(4096), allowNull: false },
 	});

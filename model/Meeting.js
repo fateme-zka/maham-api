@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) =>
 		title: { type: DataTypes.STRING, allowNull: false },
 		address: { type: DataTypes.STRING(4096), allowNull: false },
 		description: { type: DataTypes.STRING(4096), allowNull: false },
-		time: { type: DataTypes.TIME, allowNull: false },
 		date: { type: DataTypes.DATE, allowNull: false },
 		send_sms: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: false },
 	});
