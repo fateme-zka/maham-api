@@ -2,27 +2,28 @@ const error_operation = require("./error_operation");
 const TrezSmsClient = require("trez-sms-client");
 
 
-async function send(recipient_numbers, text, sender_number, context)
+async function sendSms(receivers, text, context)
 {
 	let { username, password, number } = await context.getSmsSetting();
 	const client = new TrezSmsClient(username, password);
-	return client.sendMessage(sender_number, recipient_numbers, text);
-}
 
-async function sendText(phone_number, text, context)
-{
-	let { username, password, number } = await context.getSmsSetting();
-	const client = new TrezSmsClient(username, password);
+	// todo set random group_id
+	let group_id = Math.floor(Math.random() * 9 * Math.pow(10, 9)) + Math.pow(10, 9);
+
 	try
 	{
-		return await client.manualSendCode(phone_number, text);
+		let receipt = await client.sendMessage(number, receivers, text, group_id);
+		return {
+			message: "message sent successfully",
+			receipt
+		}
 	}
 	catch {
-		error_operation.throwError(404, "Sms did not send.");
+		error_operation.throwError(404, "ERROR: " + error.isHttpException, error.code, error.message);
 	}
 }
 
+
 module.exports = {
-	send,
-	sendText
+	sendSms
 };
