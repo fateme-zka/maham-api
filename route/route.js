@@ -19,5 +19,6 @@ router.use("/contact_us", require("./contact_us"));
 router.use("/customer", require("./customer/customer"));
 router.use("/customer/followup", require("./customer/followup"));
 router.use("/meeting", require("./meeting"));
+router.use("/demand", require("./demand"));
 
 module.exports = router;

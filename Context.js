@@ -1158,4 +1158,78 @@ module.exports = class Context
 		return await meeting.save({ transaction: trx });
 	}
 	//#endregion
+
+	//#region Demand
+	async getAllDemands(user_id, trx)
+	{
+		let where = {};
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.demand.findAll({
+			where,
+			transaction: trx
+		});
+	}
+
+	async getDemand(id, user_id, trx)
+	{
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id;
+		return await this.database.models.demand.findOne({
+			where,
+			transaction: trx
+		});
+	}
+
+	async addDemand(user_id, customer_id, estate_type_id, sale_method, province_id, city_id, min_price, max_price, min_meter, max_meter, description, parking, storeroom, elevator, waterfront, gazebo, green_space, security_door, table_gas, kitchen_hood, furnished, shooting, barbecue, fireplace, automatic_door, central_antenna, terrace, sauna, jacuzzi, air_conditioner, camera, video_door_phone, pool, trx)
+	{
+		let values = { user_id, customer_id, estate_type_id, sale_method, province_id, city_id, min_price, max_price, min_meter, max_meter, description, parking, storeroom, elevator, waterfront, gazebo, green_space, security_door, table_gas, kitchen_hood, furnished, shooting, barbecue, fireplace, automatic_door, central_antenna, terrace, sauna, jacuzzi, air_conditioner, camera, video_door_phone, pool };
+		return await this.createModel("demand", values, trx);
+	}
+
+	async deleteDemand(id, user_id, trx)
+	{
+		let where = { id };
+		if (user_id)
+			where.user_id = user_id;
+		return await this.deleteModel("demand", { where }, trx);
+	}
+
+	async updateDemand(id, province_id, city_id, min_price, max_price, min_meter, max_meter, description, parking, storeroom, elevator, waterfront, gazebo, green_space, security_door, table_gas, kitchen_hood, furnished, shooting, barbecue, fireplace, automatic_door, central_antenna, terrace, sauna, jacuzzi, air_conditioner, camera, video_door_phone, pool, trx)
+	{
+		let demand = await this.getModel("demand", { where: { id } }, trx);
+		demand.province_id = province_id;
+		demand.city_id = city_id;
+		demand.min_price = min_price;
+		demand.max_price = max_price;
+		demand.min_meter = min_meter;
+		demand.max_meter = max_meter;
+		demand.description = description;
+		demand.parking = parking;
+		demand.storeroom = storeroom;
+		demand.elevator = elevator;
+		demand.waterfront = waterfront;
+		demand.gazebo = gazebo;
+		demand.green_space = green_space;
+		demand.security_door = security_door;
+		demand.table_gas = table_gas;
+		demand.kitchen_hood = kitchen_hood;
+		demand.furnished = furnished;
+		demand.shooting = shooting;
+		demand.barbecue = barbecue;
+		demand.fireplace = fireplace;
+		demand.automatic_door = automatic_door;
+		demand.central_antenna = central_antenna;
+		demand.terrace = terrace;
+		demand.sauna = sauna;
+		demand.jacuzzi = jacuzzi;
+		demand.air_conditioner = air_conditioner;
+		demand.camera = camera;
+		demand.video_door_phone = video_door_phone;
+		demand.pool = pool;
+
+		return await demand.save({ transaction: trx });
+	}
+	//#endregion
 };
